@@ -1,0 +1,87 @@
+.shop-page {
+    width: 85%;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 50px;
+  }
+  
+  .exclusive-products-section {
+    margin-top: -30px;
+  }
+
+  .categories-section,
+  .exclusive-products-section {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  .categories-section h2,
+  .exclusive-products-section h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .categories-section p,
+  .exclusive-products-section p {
+    font-size: 1.2em;
+    color: #777;
+  }
+  
+  .categories {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .category {
+    text-align: center;
+  }
+  
+  .category img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .category h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+  }
+  
+  .category p {
+    font-size: 1em;
+    color: #777;
+  }
+  
+  .products {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: -20px;
+  }
+  
+  .product {
+    position: relative;
+    text-align: center;
+  }
+  
+  .product img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .product p {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+    font-size: 1em;
+  }
+  
