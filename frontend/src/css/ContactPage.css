@@ -1,0 +1,88 @@
+.contact-page {
+    text-align: center;
+    padding: 100px;
+  }
+  
+  .contact-header {
+    margin-bottom: 50px;
+  }
+  
+  .contact-page h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .contact-page p {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 50px;
+  }
+  
+  .contact-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .contact-cards::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #efefef;
+    z-index: -1;
+  }
+  
+  .contact-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 250px;
+    text-align: left;
+  }
+  
+  .card-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    height: 100px;
+  }
+  
+  .card-icon img {
+    max-width: 80px;
+    max-height: 100px;
+    border-radius: 50%;
+  }
+  
+  .contact-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .contact-card p {
+    color: #777;
+    margin-bottom: 10px;
+  }
+  
+  .contact-card button {
+    background-color: white;
+    border: 1px solid #007bff;
+    color: #007bff;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .contact-card button:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  

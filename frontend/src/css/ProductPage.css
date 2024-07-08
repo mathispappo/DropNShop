@@ -12,6 +12,10 @@
     margin-bottom: 50px;
   }
   
+  .product-image {
+    padding-top: 80px;
+  }
+
   .product-image img {
     width: 400px;
     height: auto;

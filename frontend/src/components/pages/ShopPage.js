@@ -1,13 +1,13 @@
 import React from 'react';
 import '../../css/ShopPage.css';
-import bags from '../../assets/bags.png';
-import shoes from '../../assets/shoes.png';
-import cosmetics from '../../assets/cosmetics.png';
-import electronics from '../../assets/electronics.png';
-import product1 from '../../assets/product1.png';
-import product2 from '../../assets/product2.png';
-import product3 from '../../assets/product3.png';
-import product4 from '../../assets/product4.png';
+import bags from '../../assets/category/bags.png';
+import shoes from '../../assets/category/shoes.png';
+import cosmetics from '../../assets/category/cosmetics.png';
+import electronics from '../../assets/category/electronics.png';
+import product1 from '../../assets/product/product1.png';
+import product2 from '../../assets/product/product2.png';
+import product3 from '../../assets/product/product3.png';
+import product4 from '../../assets/product/product4.png';
 import { Link } from 'react-router-dom';
 
 function ShopPage() {
@@ -50,18 +50,24 @@ function ShopPage() {
               <p>-10%</p>
             </div>
           </Link>
-          <div className="product">
-            <img src={product2} alt="Product 2" />
-            <p>-05%</p>
-          </div>
-          <div className="product">
-            <img src={product3} alt="Product 3" />
-            <p>-15%</p>
-          </div>
-          <div className="product">
-            <img src={product4} alt="Product 4" />
-            <p>-31%</p>
-          </div>
+          <Link to="/product1">
+            <div className="product">
+              <img src={product2} alt="Product 2" />
+              <p>-05%</p>
+            </div>
+          </Link>
+          <Link to="/product1">
+            <div className="product">
+              <img src={product3} alt="Product 3" />
+              <p>-15%</p>
+            </div>
+          </Link>
+          <Link to="/product1">
+            <div className="product">
+              <img src={product4} alt="Product 4" />
+              <p>-31%</p>
+            </div>
+          </Link>
         </div>
       </section>
     </div>

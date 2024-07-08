@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../css/ProductPage.css';
-import productImage from '../../assets/product1.png';
+import productImage from '../../assets/product/product1.png';
+import { Link } from 'react-router-dom';
 
 function ProductPage() {
   return (
@@ -22,7 +23,9 @@ function ProductPage() {
             <input type="number" id="quantity" name="quantity" min="1" defaultValue="1" />
           </div>
           <p className="subtotal">Subtotal: $286.00</p>
-          <button className="buy-now-button">BUY NOW</button>
+          <Link to="/basket">
+            <button className="buy-now-button">BUY NOW</button>
+          </Link>
           <div className="terms">
             <input type="checkbox" id="terms" name="terms" />
             <label htmlFor="terms">I agree with <a href="/terms">Terms & Conditions</a></label>

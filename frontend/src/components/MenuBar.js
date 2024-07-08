@@ -1,16 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BiHome } from "react-icons/bi";
+
 
 function MenuBar() {
   return (
     <div style={menuStyle}>
       <div style={leftMenuStyle}>
-        <Link to="/" style={menuButtonStyle}>&#9776; Home</Link>
+        <Link to="/" style={menuButtonStyle}>
+          <BiHome />
+          Home
+        </Link>
       </div>
       <div style={centerMenuStyle}>
         <Link to="/shop" style={linkStyle}>Shop</Link>
         <Link to="/contact" style={linkStyle}>Contact</Link>
-        <Link to="/panier" style={linkStyle}>Basker</Link>
+        <Link to="/basket" style={linkStyle}>Basket</Link>
       </div>
       <div style={rightMenuStyle}>
         <button style={searchButtonStyle}>🔍 Search</button>
@@ -42,6 +47,7 @@ const centerMenuStyle = {
   display: 'flex',
   justifyContent: 'center',
   flex: 1,
+  padding: '0 0 0 120px',
 };
 
 const rightMenuStyle = {
