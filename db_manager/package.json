@@ -1,0 +1,29 @@
+{
+	"main": "src/index.ts",
+	"scripts": {
+		"start": "node src/index.js",
+		"dev": "nodemon src/index.js",
+		"lint": "biome lint . --error-on-warnings",
+		"db:push": "npx prisma migrate dev",
+		"db:pushf": "npx prisma db push --force-reset",
+		"db:studio": "npx prisma studio",
+		"grpc:generate": "rm -f grpc/* && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:grpc --grpc_out=grpc --proto_path=protos user.proto item.proto order.proto cart_item.proto"
+	},
+	"dependencies": {
+		"@grpc/grpc-js": "^1.10.11",
+		"@grpc/proto-loader": "^0.7.13",
+		"@prisma/client": "^5.14.0",
+		"dotenv": "^16.4.5",
+		"envalid": "^8.0.0",
+		"grpc-tools": "^1.12.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.7.0",
+		"@types/cors": "^2.8.17",
+		"@types/node": "^20.12.7",
+		"nodemon": "^3.1.0",
+		"prisma": "^5.16.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.4.4"
+	}
+}

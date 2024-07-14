@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  username     String     @unique
+  email        String     @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  orders       Order[]
+  CartItem     CartItem[]
+}
+
+model Item {
+  id                      Int         @id @default(autoincrement())
+  title                   String
+  shortDescription        String
+  longDescription         String
+  price                   Float
+  technicalSpecifications Json
+  imageUrl                String?
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @default(now())
+  cartItems               CartItem[]
+  OrderLine               OrderLine[]
+}
+
+model OrderLine {
+  id        Int      @id @default(autoincrement())
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId    Int
+  price     Float
+  quantity  Int
+  createdAt DateTime @default(now())
+  Order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   Int?
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  user            User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId          Int?
+  shippingAddress String
+  orderLines      OrderLine[]
+  createdAt       DateTime    @default(now())
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId    Int
+  quantity  Int
+  createdAt DateTime @default(now())
+}

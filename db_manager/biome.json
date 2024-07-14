@@ -1,0 +1,30 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.7.0/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"formatter": {
+		"lineWidth": 120
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"all": true,
+			"style": {
+				"noNonNullAssertion": "off",
+				"noParameterProperties": "off"
+			},
+			"suspicious": {
+				"noEmptyBlockStatements": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	},
+	"files": {
+		"ignore": ["grpc", "node_modules"]
+	}
+}

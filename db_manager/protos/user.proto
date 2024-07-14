@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package dropnshop;
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  string passwordHash = 4;
+  string createdAt = 5;
+}
+
+message SafeUser {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  string createdAt = 4;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string passwordHash = 3;
+}
+
+message GetUserRequest {
+  int32 id = 1;
+}
+
+message ListUsersRequest {}
+
+message UpdateUserRequest {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  string passwordHash = 4;
+}
+
+message DeleteUserRequest {
+  int32 id = 1;
+}
+
+message UserResponse {
+  SafeUser user = 1;
+}
+
+message ListUsersResponse {
+  repeated SafeUser users = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
