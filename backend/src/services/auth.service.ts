@@ -23,14 +23,21 @@ async function login(req: Request, res: Response) {
 
 async function register(req: Request, res: Response) {
 	const passwordHash = await hash(req.body.password, 10);
-	const output = await clientUsers.createUser({
-		...req.body,
-		passwordHash,
-	});
+	try {
+		const output = await clientUsers.createUser({
+			...req.body,
+			passwordHash,
+		});
 
-	const accessToken = jwt.sign({ id: output.user!.id }, env.JWT_SECRET, { expiresIn: '7d' });
+		const accessToken = jwt.sign({ id: output.user!.id }, env.JWT_SECRET, { expiresIn: '7d' });
 
-	res.json({ accessToken, user: output.user });
+		res.json({ accessToken, user: output.user });
+	} catch (error) {
+		const err = error as { code: number };
+		if ('code' in err && err.code === 2) return res.status(409).json({ message: 'User already exists.' });
+
+		throw error;
+	}
 }
 
 function google(req: Request, res: Response, next: NextFunction) {

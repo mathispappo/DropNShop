@@ -16,6 +16,14 @@ import type { DeleteUserRequest } from './types/dropnshop/DeleteUserRequest';
 import type { DeleteUserResponse__Output } from './types/dropnshop/DeleteUserResponse';
 import type { GetUserByUsernameRequest } from './types/dropnshop/GetUserByUsernameRequest';
 import type { GetUserByGoogleIdRequest } from './types/dropnshop/GetUserByGoogleIdRequest';
+import type { CreateItemRequest } from './types/dropnshop/CreateItemRequest';
+import type { ItemResponse__Output } from './types/dropnshop/ItemResponse';
+import type { GetItemRequest } from './types/dropnshop/GetItemRequest';
+import type { ListItemsRequest } from './types/dropnshop/ListItemsRequest';
+import type { ListItemsResponse__Output } from './types/dropnshop/ListItemsResponse';
+import type { UpdateItemRequest } from './types/dropnshop/UpdateItemRequest';
+import type { DeleteItemRequest } from './types/dropnshop/DeleteItemRequest';
+import type { DeleteItemResponse__Output } from './types/dropnshop/DeleteItemResponse';
 
 type CartItemProto = CartItemProtoGrpcType['dropnshop'];
 type ItemProto = ItemProtoGrpcType['dropnshop'];
@@ -36,10 +44,7 @@ const packageDefinition = loadSync(
 );
 const protoDefinitions = loadPackageDefinition(packageDefinition).dropnshop as unknown as Proto;
 
-// const rawClientItems = new protoDefinitions.ItemService(
-// 	env.GRPC_URL,
-// 	credentials.createInsecure(),
-// );
+const rawClientItems = new protoDefinitions.ItemService(env.GRPC_URL, credentials.createInsecure());
 // const rawClientOrders = new protoDefinitions.OrderService(
 // 	env.GRPC_URL,
 // 	credentials.createInsecure(),
@@ -50,21 +55,43 @@ const rawClientUsers = new protoDefinitions.UserService(env.GRPC_URL, credential
 // 	credentials.createInsecure(),
 // );
 
-// export const clientItems = {
-// 	createItem: (
-// 		payload: ItemProto['CreateItemRequest']['type'],
-// 	): Promise<ItemProto['ItemResponse']['type']> =>
-// 		new Promise((resolve, reject) => {
-// 			rawClientItems.CreateItem(payload, (err, res) => {
-// 				if (err) reject(err);
-// 				resolve(res!);
-// 			});
-// 		}),
-// 	getItem: util.promisify(rawClientItems.GetItem),
-// 	listItems: util.promisify(rawClientItems.ListItems),
-// 	updateItem: util.promisify(rawClientItems.UpdateItem),
-// 	deleteItem: util.promisify(rawClientItems.DeleteItem),
-// };
+export const clientItems = {
+	createItem: (payload: CreateItemRequest): Promise<ItemResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientItems.CreateItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	getItem: (payload: GetItemRequest): Promise<ItemResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientItems.GetItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	listItems: (payload: ListItemsRequest): Promise<ListItemsResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientItems.ListItems(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	updateItem: (payload: UpdateItemRequest): Promise<ItemResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientItems.UpdateItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	deleteItem: (payload: DeleteItemRequest): Promise<DeleteItemResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientItems.DeleteItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+};
 
 // export const clientOrders = {
 // 	createOrders: util.promisify(rawClientOrders.CreateOrders),

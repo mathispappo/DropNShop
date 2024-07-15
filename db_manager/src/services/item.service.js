@@ -69,6 +69,11 @@ async function UpdateItem(call, callback) {
 		});
 		callback(null, { item });
 	} catch (error) {
+		if (error.code === 'P2025') {
+			callback(null, { item: null });
+			return;
+		}
+
 		callback(error, null);
 	}
 }
@@ -81,6 +86,11 @@ async function DeleteItem(call, callback) {
 		});
 		callback(null, { success: true });
 	} catch (error) {
+		if (error.code === 'P2025') {
+			callback(null, { success: false });
+			return;
+		}
+
 		callback(error, null);
 	}
 }
