@@ -1,20 +1,37 @@
 const { prisma } = require('../db');
 
+const select = {
+	id: true,
+	username: true,
+	googleId: true,
+	email: true,
+	createdAt: true,
+};
+
 async function CreateUser(call, callback) {
-	const { username, email, passwordHash } = call.request;
+	const { googleId, username, email, passwordHash } = call.request;
 	try {
 		const user = await prisma.user.create({
 			data: {
+				googleId,
 				username,
 				email,
 				passwordHash,
 			},
-			select: {
-				id: true,
-				username: true,
-				email: true,
-				createdAt: true,
-			},
+			select,
+		});
+		callback(null, { user });
+	} catch (error) {
+		callback(error, null);
+	}
+}
+
+async function GetUserByGoogleId(call, callback) {
+	const { googleId } = call.request;
+	try {
+		const user = await prisma.user.findUnique({
+			where: { googleId },
+			select,
 		});
 		callback(null, { user });
 	} catch (error) {
@@ -28,10 +45,7 @@ async function GetUserByUsername(call, callback) {
 		const user = await prisma.user.findUnique({
 			where: { username },
 			select: {
-				id: true,
-				username: true,
-				email: true,
-				createdAt: true,
+				...select,
 				passwordHash: true,
 			},
 		});
@@ -46,12 +60,7 @@ async function GetUser(call, callback) {
 	try {
 		const user = await prisma.user.findUnique({
 			where: { id: Number(id) },
-			select: {
-				id: true,
-				username: true,
-				email: true,
-				createdAt: true,
-			},
+			select,
 		});
 		callback(null, { user });
 	} catch (error) {
@@ -62,12 +71,7 @@ async function GetUser(call, callback) {
 async function ListUsers(_call, callback) {
 	try {
 		const users = await prisma.user.findMany({
-			select: {
-				id: true,
-				username: true,
-				email: true,
-				createdAt: true,
-			},
+			select,
 		});
 		callback(null, { users });
 	} catch (error) {
@@ -89,12 +93,7 @@ async function UpdateUser(call, callback) {
 		const user = await prisma.user.update({
 			where: { id: Number(id) },
 			data,
-			select: {
-				id: true,
-				username: true,
-				email: true,
-				createdAt: true,
-			},
+			select,
 		});
 		callback(null, { user });
 	} catch (error) {
@@ -117,6 +116,7 @@ async function DeleteUser(call, callback) {
 module.exports = {
 	CreateUser,
 	GetUser,
+	GetUserByGoogleId,
 	GetUserByUsername,
 	ListUsers,
 	UpdateUser,

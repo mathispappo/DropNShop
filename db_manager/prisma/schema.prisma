@@ -11,7 +11,8 @@ model User {
   id           Int        @id @default(autoincrement())
   username     String     @unique
   email        String     @unique
-  passwordHash String
+  googleId     String?    @unique
+  passwordHash String?
   createdAt    DateTime   @default(now())
   orders       Order[]
   CartItem     CartItem[]
