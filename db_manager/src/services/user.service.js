@@ -9,6 +9,31 @@ async function CreateUser(call, callback) {
 				email,
 				passwordHash,
 			},
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				createdAt: true,
+			},
+		});
+		callback(null, { user });
+	} catch (error) {
+		callback(error, null);
+	}
+}
+
+async function GetUserByUsername(call, callback) {
+	const { username } = call.request;
+	try {
+		const user = await prisma.user.findUnique({
+			where: { username },
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				createdAt: true,
+				passwordHash: true,
+			},
 		});
 		callback(null, { user });
 	} catch (error) {
@@ -64,6 +89,12 @@ async function UpdateUser(call, callback) {
 		const user = await prisma.user.update({
 			where: { id: Number(id) },
 			data,
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				createdAt: true,
+			},
 		});
 		callback(null, { user });
 	} catch (error) {
@@ -86,6 +117,7 @@ async function DeleteUser(call, callback) {
 module.exports = {
 	CreateUser,
 	GetUser,
+	GetUserByUsername,
 	ListUsers,
 	UpdateUser,
 	DeleteUser,

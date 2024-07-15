@@ -70,6 +70,17 @@ function deserialize_dropnshop_ListUsersResponse(buffer_arg) {
   return user_pb.ListUsersResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_dropnshop_SafeUserResponse(arg) {
+  if (!(arg instanceof user_pb.SafeUserResponse)) {
+    throw new Error('Expected argument of type dropnshop.SafeUserResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_dropnshop_SafeUserResponse(buffer_arg) {
+  return user_pb.SafeUserResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_dropnshop_UpdateUserRequest(arg) {
   if (!(arg instanceof user_pb.UpdateUserRequest)) {
     throw new Error('Expected argument of type dropnshop.UpdateUserRequest');
@@ -99,14 +110,25 @@ var UserServiceService = exports.UserServiceService = {
     requestStream: false,
     responseStream: false,
     requestType: user_pb.CreateUserRequest,
-    responseType: user_pb.UserResponse,
+    responseType: user_pb.SafeUserResponse,
     requestSerialize: serialize_dropnshop_CreateUserRequest,
     requestDeserialize: deserialize_dropnshop_CreateUserRequest,
-    responseSerialize: serialize_dropnshop_UserResponse,
-    responseDeserialize: deserialize_dropnshop_UserResponse,
+    responseSerialize: serialize_dropnshop_SafeUserResponse,
+    responseDeserialize: deserialize_dropnshop_SafeUserResponse,
   },
   getUser: {
     path: '/dropnshop.UserService/GetUser',
+    requestStream: false,
+    responseStream: false,
+    requestType: user_pb.GetUserRequest,
+    responseType: user_pb.SafeUserResponse,
+    requestSerialize: serialize_dropnshop_GetUserRequest,
+    requestDeserialize: deserialize_dropnshop_GetUserRequest,
+    responseSerialize: serialize_dropnshop_SafeUserResponse,
+    responseDeserialize: deserialize_dropnshop_SafeUserResponse,
+  },
+  getUserWithPasswordHash: {
+    path: '/dropnshop.UserService/GetUserWithPasswordHash',
     requestStream: false,
     responseStream: false,
     requestType: user_pb.GetUserRequest,
@@ -132,11 +154,11 @@ var UserServiceService = exports.UserServiceService = {
     requestStream: false,
     responseStream: false,
     requestType: user_pb.UpdateUserRequest,
-    responseType: user_pb.UserResponse,
+    responseType: user_pb.SafeUserResponse,
     requestSerialize: serialize_dropnshop_UpdateUserRequest,
     requestDeserialize: deserialize_dropnshop_UpdateUserRequest,
-    responseSerialize: serialize_dropnshop_UserResponse,
-    responseDeserialize: deserialize_dropnshop_UserResponse,
+    responseSerialize: serialize_dropnshop_SafeUserResponse,
+    responseDeserialize: deserialize_dropnshop_SafeUserResponse,
   },
   deleteUser: {
     path: '/dropnshop.UserService/DeleteUser',
