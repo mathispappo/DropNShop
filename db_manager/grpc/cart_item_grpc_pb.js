@@ -3,6 +3,7 @@
 'use strict';
 var grpc = require('grpc');
 var cart_item_pb = require('./cart_item_pb.js');
+var item_pb = require('./item_pb.js');
 
 function serialize_dropnshop_CartItemResponse(arg) {
   if (!(arg instanceof cart_item_pb.CartItemResponse)) {
@@ -13,17 +14,6 @@ function serialize_dropnshop_CartItemResponse(arg) {
 
 function deserialize_dropnshop_CartItemResponse(buffer_arg) {
   return cart_item_pb.CartItemResponse.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_dropnshop_CreateCartItemRequest(arg) {
-  if (!(arg instanceof cart_item_pb.CreateCartItemRequest)) {
-    throw new Error('Expected argument of type dropnshop.CreateCartItemRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_dropnshop_CreateCartItemRequest(buffer_arg) {
-  return cart_item_pb.CreateCartItemRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_dropnshop_DeleteCartItemRequest(arg) {
@@ -70,27 +60,27 @@ function deserialize_dropnshop_ListCartItemsResponse(buffer_arg) {
   return cart_item_pb.ListCartItemsResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_dropnshop_UpdateCartItemRequest(arg) {
-  if (!(arg instanceof cart_item_pb.UpdateCartItemRequest)) {
-    throw new Error('Expected argument of type dropnshop.UpdateCartItemRequest');
+function serialize_dropnshop_UpsertCartItemRequest(arg) {
+  if (!(arg instanceof cart_item_pb.UpsertCartItemRequest)) {
+    throw new Error('Expected argument of type dropnshop.UpsertCartItemRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_dropnshop_UpdateCartItemRequest(buffer_arg) {
-  return cart_item_pb.UpdateCartItemRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_dropnshop_UpsertCartItemRequest(buffer_arg) {
+  return cart_item_pb.UpsertCartItemRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
 var CartItemServiceService = exports.CartItemServiceService = {
-  createCartItem: {
-    path: '/dropnshop.CartItemService/CreateCartItem',
+  upsertCartItem: {
+    path: '/dropnshop.CartItemService/UpsertCartItem',
     requestStream: false,
     responseStream: false,
-    requestType: cart_item_pb.CreateCartItemRequest,
+    requestType: cart_item_pb.UpsertCartItemRequest,
     responseType: cart_item_pb.CartItemResponse,
-    requestSerialize: serialize_dropnshop_CreateCartItemRequest,
-    requestDeserialize: deserialize_dropnshop_CreateCartItemRequest,
+    requestSerialize: serialize_dropnshop_UpsertCartItemRequest,
+    requestDeserialize: deserialize_dropnshop_UpsertCartItemRequest,
     responseSerialize: serialize_dropnshop_CartItemResponse,
     responseDeserialize: deserialize_dropnshop_CartItemResponse,
   },
@@ -104,17 +94,6 @@ var CartItemServiceService = exports.CartItemServiceService = {
     requestDeserialize: deserialize_dropnshop_ListCartItemsRequest,
     responseSerialize: serialize_dropnshop_ListCartItemsResponse,
     responseDeserialize: deserialize_dropnshop_ListCartItemsResponse,
-  },
-  updateCartItem: {
-    path: '/dropnshop.CartItemService/UpdateCartItem',
-    requestStream: false,
-    responseStream: false,
-    requestType: cart_item_pb.UpdateCartItemRequest,
-    responseType: cart_item_pb.CartItemResponse,
-    requestSerialize: serialize_dropnshop_UpdateCartItemRequest,
-    requestDeserialize: deserialize_dropnshop_UpdateCartItemRequest,
-    responseSerialize: serialize_dropnshop_CartItemResponse,
-    responseDeserialize: deserialize_dropnshop_CartItemResponse,
   },
   deleteCartItem: {
     path: '/dropnshop.CartItemService/DeleteCartItem',

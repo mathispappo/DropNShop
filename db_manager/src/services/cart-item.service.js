@@ -1,13 +1,19 @@
 const { prisma } = require('../db');
 
-async function CreateCartItem(call, callback) {
+async function UpsertCartItem(call, callback) {
 	const { userId, itemId, quantity } = call.request;
 	try {
-		const cartItem = await prisma.cartItem.create({
-			data: {
+		const cartItem = await prisma.cartItem.upsert({
+			// biome-ignore lint/style/useNamingConvention: prisma compound key
+			where: { userId_itemId: { userId, itemId } },
+			update: { quantity },
+			create: {
 				userId,
 				itemId,
 				quantity,
+			},
+			include: {
+				item: true,
 			},
 		});
 		callback(null, { cartItem });
@@ -31,24 +37,6 @@ async function ListCartItems(call, callback) {
 	}
 }
 
-async function UpdateCartItem(call, callback) {
-	const { id, quantity } = call.request;
-	try {
-		const data = {};
-		if (quantity) {
-			data.quantity = quantity;
-		}
-
-		const cartItem = await prisma.cartItem.update({
-			where: { id: Number(id) },
-			data,
-		});
-		callback(null, { cartItem });
-	} catch (error) {
-		callback(error, null);
-	}
-}
-
 async function DeleteCartItem(call, callback) {
 	const { id } = call.request;
 	try {
@@ -56,14 +44,13 @@ async function DeleteCartItem(call, callback) {
 			where: { id: Number(id) },
 		});
 		callback(null, { success: true });
-	} catch (error) {
-		callback(error, null);
+	} catch {
+		callback(null, { success: false });
 	}
 }
 
 module.exports = {
-	CreateCartItem,
+	UpsertCartItem,
 	ListCartItems,
-	UpdateCartItem,
 	DeleteCartItem,
 };

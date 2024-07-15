@@ -60,4 +60,6 @@ model CartItem {
   itemId    Int
   quantity  Int
   createdAt DateTime @default(now())
+
+  @@unique([userId, itemId])
 }

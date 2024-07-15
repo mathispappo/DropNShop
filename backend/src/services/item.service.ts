@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { clientItems } from '../protos';
 import type { Item__Output } from '../types/dropnshop/Item';
 
-const transformItem = (item: Item__Output | undefined) =>
+export const transformItem = (item: Item__Output | undefined) =>
 	item
 		? {
 				...item,

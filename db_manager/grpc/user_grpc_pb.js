@@ -37,6 +37,28 @@ function deserialize_dropnshop_DeleteUserResponse(buffer_arg) {
   return user_pb.DeleteUserResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_dropnshop_GetUserByGoogleIdRequest(arg) {
+  if (!(arg instanceof user_pb.GetUserByGoogleIdRequest)) {
+    throw new Error('Expected argument of type dropnshop.GetUserByGoogleIdRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_dropnshop_GetUserByGoogleIdRequest(buffer_arg) {
+  return user_pb.GetUserByGoogleIdRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_dropnshop_GetUserByUsernameRequest(arg) {
+  if (!(arg instanceof user_pb.GetUserByUsernameRequest)) {
+    throw new Error('Expected argument of type dropnshop.GetUserByUsernameRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_dropnshop_GetUserByUsernameRequest(buffer_arg) {
+  return user_pb.GetUserByUsernameRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_dropnshop_GetUserRequest(arg) {
   if (!(arg instanceof user_pb.GetUserRequest)) {
     throw new Error('Expected argument of type dropnshop.GetUserRequest');
@@ -127,14 +149,25 @@ var UserServiceService = exports.UserServiceService = {
     responseSerialize: serialize_dropnshop_SafeUserResponse,
     responseDeserialize: deserialize_dropnshop_SafeUserResponse,
   },
-  getUserWithPasswordHash: {
-    path: '/dropnshop.UserService/GetUserWithPasswordHash',
+  getUserByGoogleId: {
+    path: '/dropnshop.UserService/GetUserByGoogleId',
     requestStream: false,
     responseStream: false,
-    requestType: user_pb.GetUserRequest,
+    requestType: user_pb.GetUserByGoogleIdRequest,
+    responseType: user_pb.SafeUserResponse,
+    requestSerialize: serialize_dropnshop_GetUserByGoogleIdRequest,
+    requestDeserialize: deserialize_dropnshop_GetUserByGoogleIdRequest,
+    responseSerialize: serialize_dropnshop_SafeUserResponse,
+    responseDeserialize: deserialize_dropnshop_SafeUserResponse,
+  },
+  getUserByUsername: {
+    path: '/dropnshop.UserService/GetUserByUsername',
+    requestStream: false,
+    responseStream: false,
+    requestType: user_pb.GetUserByUsernameRequest,
     responseType: user_pb.UserResponse,
-    requestSerialize: serialize_dropnshop_GetUserRequest,
-    requestDeserialize: deserialize_dropnshop_GetUserRequest,
+    requestSerialize: serialize_dropnshop_GetUserByUsernameRequest,
+    requestDeserialize: deserialize_dropnshop_GetUserByUsernameRequest,
     responseSerialize: serialize_dropnshop_UserResponse,
     responseDeserialize: deserialize_dropnshop_UserResponse,
   },

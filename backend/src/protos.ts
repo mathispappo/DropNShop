@@ -24,6 +24,12 @@ import type { ListItemsResponse__Output } from './types/dropnshop/ListItemsRespo
 import type { UpdateItemRequest } from './types/dropnshop/UpdateItemRequest';
 import type { DeleteItemRequest } from './types/dropnshop/DeleteItemRequest';
 import type { DeleteItemResponse__Output } from './types/dropnshop/DeleteItemResponse';
+import type { UpsertCartItemRequest } from './types/dropnshop/UpsertCartItemRequest';
+import type { CartItemResponse__Output } from './types/dropnshop/CartItemResponse';
+import type { ListCartItemsResponse__Output } from './types/dropnshop/ListCartItemsResponse';
+import type { ListCartItemsRequest } from './types/dropnshop/ListCartItemsRequest';
+import type { DeleteCartItemResponse__Output } from './types/dropnshop/DeleteCartItemResponse';
+import type { DeleteCartItemRequest } from './types/dropnshop/DeleteCartItemRequest';
 
 type CartItemProto = CartItemProtoGrpcType['dropnshop'];
 type ItemProto = ItemProtoGrpcType['dropnshop'];
@@ -50,10 +56,7 @@ const rawClientItems = new protoDefinitions.ItemService(env.GRPC_URL, credential
 // 	credentials.createInsecure(),
 // );
 const rawClientUsers = new protoDefinitions.UserService(env.GRPC_URL, credentials.createInsecure());
-// const rawClientCartItems = new protoDefinitions.CartItemService(
-// 	env.GRPC_URL,
-// 	credentials.createInsecure(),
-// );
+const rawClientCartItems = new protoDefinitions.CartItemService(env.GRPC_URL, credentials.createInsecure());
 
 export const clientItems = {
 	createItem: (payload: CreateItemRequest): Promise<ItemResponse__Output> =>
@@ -151,9 +154,26 @@ export const clientUsers = {
 		}),
 };
 
-// export const clientCartItems = {
-// 	createCartItem: util.promisify(rawClientCartItems.CreateCartItem),
-// 	listCartItems: util.promisify(rawClientCartItems.ListCartItems),
-// 	updateCartItem: util.promisify(rawClientCartItems.UpdateCartItem),
-// 	deleteCartItem: util.promisify(rawClientCartItems.DeleteCartItem),
-// };
+export const clientCartItems = {
+	upsertCartItem: (payload: UpsertCartItemRequest): Promise<CartItemResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientCartItems.UpsertCartItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	listCartItems: (payload: ListCartItemsRequest): Promise<ListCartItemsResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientCartItems.ListCartItems(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	deleteCartItem: (payload: DeleteCartItemRequest): Promise<DeleteCartItemResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientCartItems.DeleteCartItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+};

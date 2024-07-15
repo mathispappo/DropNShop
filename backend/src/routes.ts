@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as authService from './services/auth.service';
-// import * as cartService from './services/cart.service';
+import * as cartItemService from './services/cart-item.service';
 import * as itemService from './services/item.service';
 // import * as orderService from './services/order.service';
 import { validateSchema } from './middlewares/validate-schema';
@@ -12,6 +12,7 @@ import {
 	getItemRequestSchema,
 	updateItemRequestSchema,
 } from './schemas/item.schema';
+import { upsertCartItemRequestSchema, deleteCartItemRequestSchema } from './schemas/cart-item.schema';
 
 const router = Router();
 
@@ -44,11 +45,20 @@ router.delete(
 	itemService.remove,
 );
 
-// Cart
-// router.post('/cart', ensureAuthenticated, cartService.create);
-// router.get('/cart', ensureAuthenticated, cartService.list);
-// router.patch('/cart/:id', ensureAuthenticated, cartService.update);
-// router.delete('/cart/:id', ensureAuthenticated, cartService.remove);
+// Cart Items
+router.put(
+	'/cart-items',
+	passport.authenticate('jwt', { session: false }),
+	validateSchema(upsertCartItemRequestSchema),
+	cartItemService.put,
+);
+router.get('/cart-items', passport.authenticate('jwt', { session: false }), cartItemService.list);
+router.delete(
+	'/cart-items/:id',
+	passport.authenticate('jwt', { session: false }),
+	validateSchema(deleteCartItemRequestSchema),
+	cartItemService.remove,
+);
 
 // Orders
 // router.post('/orders', ensureAuthenticated, orderService.create);

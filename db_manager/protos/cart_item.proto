@@ -1,23 +1,24 @@
 syntax = "proto3";
 
+import "item.proto";
+
 package dropnshop;
 
 service CartItemService {
-  rpc CreateCartItem (CreateCartItemRequest) returns (CartItemResponse);
+  rpc UpsertCartItem (UpsertCartItemRequest) returns (CartItemResponse);
   rpc ListCartItems (ListCartItemsRequest) returns (ListCartItemsResponse);
-  rpc UpdateCartItem (UpdateCartItemRequest) returns (CartItemResponse);
   rpc DeleteCartItem (DeleteCartItemRequest) returns (DeleteCartItemResponse);
 }
 
 message CartItem {
   int32 id = 1;
   int32 userId = 2;
-  int32 itemId = 3;
+  Item item = 3;
   int32 quantity = 4;
   string createdAt = 5;
 }
 
-message CreateCartItemRequest {
+message UpsertCartItemRequest {
   int32 userId = 1;
   int32 itemId = 2;
   int32 quantity = 3;
@@ -27,13 +28,9 @@ message ListCartItemsRequest {
   int32 userId = 1;
 }
 
-message UpdateCartItemRequest {
-  int32 id = 1;
-  int32 quantity = 2;
-}
-
 message DeleteCartItemRequest {
   int32 id = 1;
+  int32 userId = 2;
 }
 
 message CartItemResponse {
