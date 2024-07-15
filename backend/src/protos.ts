@@ -15,6 +15,7 @@ import type { UpdateUserRequest } from './types/dropnshop/UpdateUserRequest';
 import type { DeleteUserRequest } from './types/dropnshop/DeleteUserRequest';
 import type { DeleteUserResponse__Output } from './types/dropnshop/DeleteUserResponse';
 import type { GetUserByUsernameRequest } from './types/dropnshop/GetUserByUsernameRequest';
+import type { GetUserByGoogleIdRequest } from './types/dropnshop/GetUserByGoogleIdRequest';
 
 type CartItemProto = CartItemProtoGrpcType['dropnshop'];
 type ItemProto = ItemProtoGrpcType['dropnshop'];
@@ -82,6 +83,13 @@ export const clientUsers = {
 	getUser: (payload: GetUserRequest): Promise<SafeUserResponse__Output> =>
 		new Promise((resolve, reject) => {
 			rawClientUsers.GetUser(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	getUserByGoogleId: (payload: GetUserByGoogleIdRequest): Promise<SafeUserResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientUsers.GetUserByGoogleId(payload, (err, res) => {
 				if (err) reject(err);
 				resolve(res!);
 			});

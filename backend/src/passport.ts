@@ -1,6 +1,7 @@
+import type { Request } from 'express';
 import passport from 'passport';
+import { Strategy as GoogleStrategy, type VerifyCallback } from 'passport-google-oauth2';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
-// import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import { clientUsers } from './protos';
 import { env } from './env';
 
@@ -23,38 +24,42 @@ passport.use(
 		}
 	}),
 );
-// passport.use(
-// 	'local',
-// 	new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, async (username, password, done) => {
-// 		const output = await clientUsers.getUserByUsername({ username });
-// 		console.log('DEBUG ~ output:', output);
-// 		console.log('DEBUG ~ username:', username);
-// 		console.log('DEBUG ~ password:', password);
 
-// 		if (!output?.user?.passwordHash) {
-// 			return done(null, undefined, { message: 'Unknown user.' });
-// 		}
+passport.use(
+	'google',
+	new GoogleStrategy(
+		{
+			clientID: env.GOOGLE_CLIENT_ID,
+			clientSecret: env.GOOGLE_CLIENT_SECRET,
+			callbackURL: `http://${env.BACKEND_HOST}:${env.BACKEND_PORT}/auth/google/redirect`,
+			passReqToCallback: true,
+		},
+		async (
+			_request: Request,
+			_accessToken: string,
+			_refreshToken: string,
+			profile: { id: string; email: string },
+			done: VerifyCallback,
+		) => {
+			const output = await clientUsers.getUserByGoogleId({ googleId: profile.id });
+			if (output?.user) {
+				return done(null, output?.user);
+			}
 
-// 		if (await bcrypt.compare(password, output.user.passwordHash)) {
-// 			return done(null, output.user);
-// 		}
-// 		return done(null, false, { message: 'Unknown user.' });
-// 	}),
-// );
+			const outputNewUser = await clientUsers.createUser({
+				googleId: profile.id,
+				email: profile.email,
+				username: profile.email.split('@')[0],
+			});
 
-// passport.use(
-//   new GoogleStrategy({
-//     clientID:     GOOGLE_CLIENT_ID,
-//     clientSecret: GOOGLE_CLIENT_SECRET,
-//     callbackURL: "http://yourdomain:3000/auth/google/callback",
-//     passReqToCallback   : true
-//   },
-//   function(request, accessToken, refreshToken, profile, done) {
-//     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-//       return done(err, user);
-//     });
-//   }
-// ));
+			if (!outputNewUser?.user) {
+				return done(null, undefined, { message: 'Unknown user.' });
+			}
+
+			return done(null, outputNewUser.user);
+		},
+	),
+);
 
 // biome-ignore lint/suspicious/noExplicitAny:
 passport.serializeUser((user: any, done) => done(null, user.id));

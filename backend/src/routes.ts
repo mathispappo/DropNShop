@@ -12,6 +12,8 @@ const router = Router();
 // Auth
 router.post('/auth/login', validateSchema(loginSchema), authService.login);
 router.post('/auth/register', validateSchema(registerSchema), authService.register);
+router.get('/auth/google', authService.google);
+router.get('/auth/google/redirect', authService.googleRedirect);
 router.get('/auth/me', passport.authenticate('jwt', { session: false }), authService.me);
 
 // Items

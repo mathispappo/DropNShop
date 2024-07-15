@@ -5,6 +5,7 @@ package dropnshop;
 service UserService {
   rpc CreateUser (CreateUserRequest) returns (SafeUserResponse);
   rpc GetUser (GetUserRequest) returns (SafeUserResponse);
+  rpc GetUserByGoogleId (GetUserByGoogleIdRequest) returns (SafeUserResponse);
   rpc GetUserByUsername (GetUserByUsernameRequest) returns (UserResponse);
   rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
   rpc UpdateUser (UpdateUserRequest) returns (SafeUserResponse);
@@ -15,25 +16,32 @@ message User {
   int32 id = 1;
   string username = 2;
   string email = 3;
-  string passwordHash = 4;
-  string createdAt = 5;
+  optional string googleId = 4;
+  optional string passwordHash = 5;
+  string createdAt = 6;
 }
 
 message SafeUser {
   int32 id = 1;
   string username = 2;
   string email = 3;
-  string createdAt = 4;
+  optional string googleId = 4;
+  string createdAt = 5;
 }
 
 message CreateUserRequest {
   string username = 1;
   string email = 2;
-  string passwordHash = 3;
+  optional string googleId = 3;
+  optional string passwordHash = 4;
 }
 
 message GetUserRequest {
   int32 id = 1;
+}
+
+message GetUserByGoogleIdRequest {
+  string googleId = 1;
 }
 
 message GetUserByUsernameRequest {
@@ -49,9 +57,9 @@ message ListUsersRequest {}
 
 message UpdateUserRequest {
   int32 id = 1;
-  string username = 2;
-  string email = 3;
-  string passwordHash = 4;
+  optional string username = 2;
+  optional string email = 3;
+  optional string passwordHash = 4;
 }
 
 message DeleteUserRequest {

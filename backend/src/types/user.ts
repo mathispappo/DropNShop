@@ -14,6 +14,7 @@ export interface ProtoGrpcType {
     CreateUserRequest: MessageTypeDefinition
     DeleteUserRequest: MessageTypeDefinition
     DeleteUserResponse: MessageTypeDefinition
+    GetUserByGoogleIdRequest: MessageTypeDefinition
     GetUserByUsernameRequest: MessageTypeDefinition
     GetUserRequest: MessageTypeDefinition
     ListUsersRequest: MessageTypeDefinition

@@ -12,4 +12,8 @@ export const env = cleanEnv(process.env, {
 	JWT_SECRET: str(),
 	// biome-ignore lint/style/useNamingConvention: environment variables are uppercase
 	GRPC_URL: url(),
+	// biome-ignore lint/style/useNamingConvention: environment variables are uppercase
+	GOOGLE_CLIENT_ID: str(),
+	// biome-ignore lint/style/useNamingConvention: environment variables are uppercase
+	GOOGLE_CLIENT_SECRET: str(),
 });

@@ -6,6 +6,9 @@ export interface UpdateUserRequest {
   'username'?: (string);
   'email'?: (string);
   'passwordHash'?: (string);
+  '_username'?: "username";
+  '_email'?: "email";
+  '_passwordHash'?: "passwordHash";
 }
 
 export interface UpdateUserRequest__Output {
