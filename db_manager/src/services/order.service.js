@@ -1,6 +1,6 @@
 const { prisma } = require('../db');
 
-async function CreateOrders(call, callback) {
+async function CreateOrder(call, callback) {
 	const { userId, shippingAddress, orderLines } = call.request;
 	try {
 		const order = await prisma.order.create({
@@ -9,6 +9,13 @@ async function CreateOrders(call, callback) {
 				shippingAddress,
 				orderLines: {
 					create: orderLines,
+				},
+			},
+			include: {
+				orderLines: {
+					include: {
+						item: true,
+					},
 				},
 			},
 		});
@@ -23,6 +30,13 @@ async function GetOrder(call, callback) {
 	try {
 		const order = await prisma.order.findUnique({
 			where: { id: Number(id) },
+			include: {
+				orderLines: {
+					include: {
+						item: true,
+					},
+				},
+			},
 		});
 		callback(null, { order });
 	} catch (error) {
@@ -32,7 +46,15 @@ async function GetOrder(call, callback) {
 
 async function ListOrders(_call, callback) {
 	try {
-		const orders = await prisma.order.findMany();
+		const orders = await prisma.order.findMany({
+			include: {
+				orderLines: {
+					include: {
+						item: true,
+					},
+				},
+			},
+		});
 		callback(null, { orders });
 	} catch (error) {
 		callback(error, null);
@@ -40,7 +62,7 @@ async function ListOrders(_call, callback) {
 }
 
 module.exports = {
-	CreateOrders,
+	CreateOrder,
 	GetOrder,
 	ListOrders,
 };

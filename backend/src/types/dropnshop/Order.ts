@@ -1,13 +1,13 @@
 // Original file: protos/order.proto
 
-import type { Order as _dropnshop_Order, Order__Output as _dropnshop_Order__Output } from '../dropnshop/Order';
+import type { OrderLine as _dropnshop_OrderLine, OrderLine__Output as _dropnshop_OrderLine__Output } from '../dropnshop/OrderLine';
 
 export interface Order {
   'id'?: (number);
   'userId'?: (number);
   'shippingAddress'?: (string);
   'createdAt'?: (string);
-  'orderLines'?: (_dropnshop_Order)[];
+  'orderLines'?: (_dropnshop_OrderLine)[];
 }
 
 export interface Order__Output {
@@ -15,5 +15,5 @@ export interface Order__Output {
   'userId'?: (number);
   'shippingAddress'?: (string);
   'createdAt'?: (string);
-  'orderLines'?: (_dropnshop_Order__Output)[];
+  'orderLines'?: (_dropnshop_OrderLine__Output)[];
 }

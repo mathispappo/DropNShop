@@ -5,6 +5,7 @@ package dropnshop;
 service ItemService {
   rpc CreateItem (CreateItemRequest) returns (ItemResponse);
   rpc GetItem (GetItemRequest) returns (ItemResponse);
+  rpc GetManyItems (GetManyItemsRequest) returns (ListItemsResponse);
   rpc ListItems (ListItemsRequest) returns (ListItemsResponse);
   rpc UpdateItem (UpdateItemRequest) returns (ItemResponse);
   rpc DeleteItem (DeleteItemRequest) returns (DeleteItemResponse);
@@ -33,6 +34,10 @@ message CreateItemRequest {
 
 message GetItemRequest {
   int32 id = 1;
+}
+
+message GetManyItemsRequest {
+  repeated int32 ids = 1;
 }
 
 message ListItemsRequest {}

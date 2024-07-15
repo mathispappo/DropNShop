@@ -3,6 +3,7 @@
 'use strict';
 var grpc = require('grpc');
 var order_pb = require('./order_pb.js');
+var item_pb = require('./item_pb.js');
 
 function serialize_dropnshop_CreateOrderRequest(arg) {
   if (!(arg instanceof order_pb.CreateOrderRequest)) {
@@ -61,8 +62,8 @@ function deserialize_dropnshop_OrderResponse(buffer_arg) {
 
 
 var OrderServiceService = exports.OrderServiceService = {
-  createOrders: {
-    path: '/dropnshop.OrderService/CreateOrders',
+  createOrder: {
+    path: '/dropnshop.OrderService/CreateOrder',
     requestStream: false,
     responseStream: false,
     requestType: order_pb.CreateOrderRequest,

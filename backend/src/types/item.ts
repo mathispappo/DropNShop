@@ -13,6 +13,7 @@ export interface ProtoGrpcType {
     DeleteItemRequest: MessageTypeDefinition
     DeleteItemResponse: MessageTypeDefinition
     GetItemRequest: MessageTypeDefinition
+    GetManyItemsRequest: MessageTypeDefinition
     Item: MessageTypeDefinition
     ItemResponse: MessageTypeDefinition
     ItemService: SubtypeConstructor<typeof grpc.Client, _dropnshop_ItemServiceClient> & { service: _dropnshop_ItemServiceDefinition }

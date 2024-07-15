@@ -9,14 +9,14 @@ import type { ListOrdersResponse as _dropnshop_ListOrdersResponse, ListOrdersRes
 import type { OrderResponse as _dropnshop_OrderResponse, OrderResponse__Output as _dropnshop_OrderResponse__Output } from '../dropnshop/OrderResponse';
 
 export interface OrderServiceClient extends grpc.Client {
-  CreateOrders(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  CreateOrders(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  CreateOrders(argument: _dropnshop_CreateOrderRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  CreateOrders(argument: _dropnshop_CreateOrderRequest, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  createOrders(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  createOrders(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  createOrders(argument: _dropnshop_CreateOrderRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
-  createOrders(argument: _dropnshop_CreateOrderRequest, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  CreateOrder(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  CreateOrder(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  CreateOrder(argument: _dropnshop_CreateOrderRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  CreateOrder(argument: _dropnshop_CreateOrderRequest, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  createOrder(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  createOrder(argument: _dropnshop_CreateOrderRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  createOrder(argument: _dropnshop_CreateOrderRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
+  createOrder(argument: _dropnshop_CreateOrderRequest, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
   
   GetOrder(argument: _dropnshop_GetOrderRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
   GetOrder(argument: _dropnshop_GetOrderRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_dropnshop_OrderResponse__Output>): grpc.ClientUnaryCall;
@@ -39,7 +39,7 @@ export interface OrderServiceClient extends grpc.Client {
 }
 
 export interface OrderServiceHandlers extends grpc.UntypedServiceImplementation {
-  CreateOrders: grpc.handleUnaryCall<_dropnshop_CreateOrderRequest__Output, _dropnshop_OrderResponse>;
+  CreateOrder: grpc.handleUnaryCall<_dropnshop_CreateOrderRequest__Output, _dropnshop_OrderResponse>;
   
   GetOrder: grpc.handleUnaryCall<_dropnshop_GetOrderRequest__Output, _dropnshop_OrderResponse>;
   
@@ -48,7 +48,7 @@ export interface OrderServiceHandlers extends grpc.UntypedServiceImplementation 
 }
 
 export interface OrderServiceDefinition extends grpc.ServiceDefinition {
-  CreateOrders: MethodDefinition<_dropnshop_CreateOrderRequest, _dropnshop_OrderResponse, _dropnshop_CreateOrderRequest__Output, _dropnshop_OrderResponse__Output>
+  CreateOrder: MethodDefinition<_dropnshop_CreateOrderRequest, _dropnshop_OrderResponse, _dropnshop_CreateOrderRequest__Output, _dropnshop_OrderResponse__Output>
   GetOrder: MethodDefinition<_dropnshop_GetOrderRequest, _dropnshop_OrderResponse, _dropnshop_GetOrderRequest__Output, _dropnshop_OrderResponse__Output>
   ListOrders: MethodDefinition<_dropnshop_ListOrdersRequest, _dropnshop_ListOrdersResponse, _dropnshop_ListOrdersRequest__Output, _dropnshop_ListOrdersResponse__Output>
 }

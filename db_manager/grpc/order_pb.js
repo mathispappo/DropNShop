@@ -21,6 +21,8 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
+var item_pb = require('./item_pb.js');
+goog.object.extend(proto, item_pb);
 goog.exportSymbol('proto.dropnshop.CreateOrderLineRequest', null, global);
 goog.exportSymbol('proto.dropnshop.CreateOrderRequest', null, global);
 goog.exportSymbol('proto.dropnshop.GetOrderRequest', null, global);
@@ -230,7 +232,7 @@ proto.dropnshop.OrderLine.prototype.toObject = function(opt_includeInstance) {
 proto.dropnshop.OrderLine.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    itemid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    item: (f = msg.getItem()) && item_pb.Item.toObject(includeInstance, f),
     price: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
     quantity: jspb.Message.getFieldWithDefault(msg, 4, 0),
     createdat: jspb.Message.getFieldWithDefault(msg, 5, "")
@@ -275,11 +277,12 @@ proto.dropnshop.OrderLine.deserializeBinaryFromReader = function(msg, reader) {
       msg.setId(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setItemid(value);
+      var value = new item_pb.Item;
+      reader.readMessage(value,item_pb.Item.deserializeBinaryFromReader);
+      msg.setItem(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readFloat());
+      var value = /** @type {number} */ (reader.readDouble());
       msg.setPrice(value);
       break;
     case 4:
@@ -326,16 +329,17 @@ proto.dropnshop.OrderLine.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getItemid();
-  if (f !== 0) {
-    writer.writeInt32(
+  f = message.getItem();
+  if (f != null) {
+    writer.writeMessage(
       2,
-      f
+      f,
+      item_pb.Item.serializeBinaryToWriter
     );
   }
   f = message.getPrice();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       3,
       f
     );
@@ -376,25 +380,44 @@ proto.dropnshop.OrderLine.prototype.setId = function(value) {
 
 
 /**
- * optional int32 itemId = 2;
- * @return {number}
+ * optional Item item = 2;
+ * @return {?proto.dropnshop.Item}
  */
-proto.dropnshop.OrderLine.prototype.getItemid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+proto.dropnshop.OrderLine.prototype.getItem = function() {
+  return /** @type{?proto.dropnshop.Item} */ (
+    jspb.Message.getWrapperField(this, item_pb.Item, 2));
 };
 
 
 /**
- * @param {number} value
+ * @param {?proto.dropnshop.Item|undefined} value
+ * @return {!proto.dropnshop.OrderLine} returns this
+*/
+proto.dropnshop.OrderLine.prototype.setItem = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.dropnshop.OrderLine} returns this
  */
-proto.dropnshop.OrderLine.prototype.setItemid = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+proto.dropnshop.OrderLine.prototype.clearItem = function() {
+  return this.setItem(undefined);
 };
 
 
 /**
- * optional float price = 3;
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.dropnshop.OrderLine.prototype.hasItem = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional double price = 3;
  * @return {number}
  */
 proto.dropnshop.OrderLine.prototype.getPrice = function() {
@@ -491,7 +514,7 @@ proto.dropnshop.Order.toObject = function(includeInstance, msg) {
     shippingaddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
     createdat: jspb.Message.getFieldWithDefault(msg, 4, ""),
     orderlinesList: jspb.Message.toObjectList(msg.getOrderlinesList(),
-    proto.dropnshop.Order.toObject, includeInstance)
+    proto.dropnshop.OrderLine.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -545,8 +568,8 @@ proto.dropnshop.Order.deserializeBinaryFromReader = function(msg, reader) {
       msg.setCreatedat(value);
       break;
     case 5:
-      var value = new proto.dropnshop.Order;
-      reader.readMessage(value,proto.dropnshop.Order.deserializeBinaryFromReader);
+      var value = new proto.dropnshop.OrderLine;
+      reader.readMessage(value,proto.dropnshop.OrderLine.deserializeBinaryFromReader);
       msg.addOrderlines(value);
       break;
     default:
@@ -611,7 +634,7 @@ proto.dropnshop.Order.serializeBinaryToWriter = function(message, writer) {
     writer.writeRepeatedMessage(
       5,
       f,
-      proto.dropnshop.Order.serializeBinaryToWriter
+      proto.dropnshop.OrderLine.serializeBinaryToWriter
     );
   }
 };
@@ -690,17 +713,17 @@ proto.dropnshop.Order.prototype.setCreatedat = function(value) {
 
 
 /**
- * repeated Order orderLines = 5;
- * @return {!Array<!proto.dropnshop.Order>}
+ * repeated OrderLine orderLines = 5;
+ * @return {!Array<!proto.dropnshop.OrderLine>}
  */
 proto.dropnshop.Order.prototype.getOrderlinesList = function() {
-  return /** @type{!Array<!proto.dropnshop.Order>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.dropnshop.Order, 5));
+  return /** @type{!Array<!proto.dropnshop.OrderLine>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.dropnshop.OrderLine, 5));
 };
 
 
 /**
- * @param {!Array<!proto.dropnshop.Order>} value
+ * @param {!Array<!proto.dropnshop.OrderLine>} value
  * @return {!proto.dropnshop.Order} returns this
 */
 proto.dropnshop.Order.prototype.setOrderlinesList = function(value) {
@@ -709,12 +732,12 @@ proto.dropnshop.Order.prototype.setOrderlinesList = function(value) {
 
 
 /**
- * @param {!proto.dropnshop.Order=} opt_value
+ * @param {!proto.dropnshop.OrderLine=} opt_value
  * @param {number=} opt_index
- * @return {!proto.dropnshop.Order}
+ * @return {!proto.dropnshop.OrderLine}
  */
 proto.dropnshop.Order.prototype.addOrderlines = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 5, opt_value, proto.dropnshop.Order, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 5, opt_value, proto.dropnshop.OrderLine, opt_index);
 };
 
 
@@ -803,7 +826,7 @@ proto.dropnshop.CreateOrderLineRequest.deserializeBinaryFromReader = function(ms
       msg.setItemid(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readFloat());
+      var value = /** @type {number} */ (reader.readDouble());
       msg.setPrice(value);
       break;
     case 3:
@@ -848,7 +871,7 @@ proto.dropnshop.CreateOrderLineRequest.serializeBinaryToWriter = function(messag
   }
   f = message.getPrice();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       2,
       f
     );
@@ -882,7 +905,7 @@ proto.dropnshop.CreateOrderLineRequest.prototype.setItemid = function(value) {
 
 
 /**
- * optional float price = 2;
+ * optional double price = 2;
  * @return {number}
  */
 proto.dropnshop.CreateOrderLineRequest.prototype.getPrice = function() {

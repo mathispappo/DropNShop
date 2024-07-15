@@ -31,6 +31,20 @@ async function GetItem(call, callback) {
 	}
 }
 
+async function GetManyItems(call, callback) {
+	const { ids } = call.request;
+	try {
+		const items = await prisma.item.findMany({
+			where: {
+				id: { in: ids },
+			},
+		});
+		callback(null, { items });
+	} catch (error) {
+		callback(error, null);
+	}
+}
+
 async function ListItems(_call, callback) {
 	try {
 		const items = await prisma.item.findMany();
@@ -98,6 +112,7 @@ async function DeleteItem(call, callback) {
 module.exports = {
 	CreateItem,
 	GetItem,
+	GetManyItems,
 	ListItems,
 	UpdateItem,
 	DeleteItem,

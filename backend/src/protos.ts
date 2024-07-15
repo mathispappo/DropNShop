@@ -30,6 +30,12 @@ import type { ListCartItemsResponse__Output } from './types/dropnshop/ListCartIt
 import type { ListCartItemsRequest } from './types/dropnshop/ListCartItemsRequest';
 import type { DeleteCartItemResponse__Output } from './types/dropnshop/DeleteCartItemResponse';
 import type { DeleteCartItemRequest } from './types/dropnshop/DeleteCartItemRequest';
+import type { CreateOrderRequest } from './types/dropnshop/CreateOrderRequest';
+import type { OrderResponse__Output } from './types/dropnshop/OrderResponse';
+import type { ListOrdersResponse__Output } from './types/dropnshop/ListOrdersResponse';
+import type { ListOrdersRequest } from './types/dropnshop/ListOrdersRequest';
+import type { GetOrderRequest } from './types/dropnshop/GetOrderRequest';
+import type { GetManyItemRequest } from './types/dropnshop/GetManyItemRequest';
 
 type CartItemProto = CartItemProtoGrpcType['dropnshop'];
 type ItemProto = ItemProtoGrpcType['dropnshop'];
@@ -51,10 +57,7 @@ const packageDefinition = loadSync(
 const protoDefinitions = loadPackageDefinition(packageDefinition).dropnshop as unknown as Proto;
 
 const rawClientItems = new protoDefinitions.ItemService(env.GRPC_URL, credentials.createInsecure());
-// const rawClientOrders = new protoDefinitions.OrderService(
-// 	env.GRPC_URL,
-// 	credentials.createInsecure(),
-// );
+const rawClientOrders = new protoDefinitions.OrderService(env.GRPC_URL, credentials.createInsecure());
 const rawClientUsers = new protoDefinitions.UserService(env.GRPC_URL, credentials.createInsecure());
 const rawClientCartItems = new protoDefinitions.CartItemService(env.GRPC_URL, credentials.createInsecure());
 
@@ -69,6 +72,13 @@ export const clientItems = {
 	getItem: (payload: GetItemRequest): Promise<ItemResponse__Output> =>
 		new Promise((resolve, reject) => {
 			rawClientItems.GetItem(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	getManyItems: (payload: GetManyItemRequest): Promise<ListItemsResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientItems.GetManyItems(payload, (err, res) => {
 				if (err) reject(err);
 				resolve(res!);
 			});
@@ -96,11 +106,29 @@ export const clientItems = {
 		}),
 };
 
-// export const clientOrders = {
-// 	createOrders: util.promisify(rawClientOrders.CreateOrders),
-// 	getOrder: util.promisify(rawClientOrders.GetOrder),
-// 	listOrders: util.promisify(rawClientOrders.ListOrders),
-// };
+export const clientOrders = {
+	createOrder: (payload: CreateOrderRequest): Promise<OrderResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientOrders.CreateOrder(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	getOrder: (payload: GetOrderRequest): Promise<OrderResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientOrders.GetOrder(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+	listOrders: (payload: ListOrdersRequest): Promise<ListOrdersResponse__Output> =>
+		new Promise((resolve, reject) => {
+			rawClientOrders.ListOrders(payload, (err, res) => {
+				if (err) reject(err);
+				resolve(res!);
+			});
+		}),
+};
 
 export const clientUsers = {
 	createUser: (payload: CreateUserRequest): Promise<SafeUserResponse__Output> =>

@@ -48,6 +48,17 @@ function deserialize_dropnshop_GetItemRequest(buffer_arg) {
   return item_pb.GetItemRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_dropnshop_GetManyItemsRequest(arg) {
+  if (!(arg instanceof item_pb.GetManyItemsRequest)) {
+    throw new Error('Expected argument of type dropnshop.GetManyItemsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_dropnshop_GetManyItemsRequest(buffer_arg) {
+  return item_pb.GetManyItemsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_dropnshop_ItemResponse(arg) {
   if (!(arg instanceof item_pb.ItemResponse)) {
     throw new Error('Expected argument of type dropnshop.ItemResponse');
@@ -115,6 +126,17 @@ var ItemServiceService = exports.ItemServiceService = {
     requestDeserialize: deserialize_dropnshop_GetItemRequest,
     responseSerialize: serialize_dropnshop_ItemResponse,
     responseDeserialize: deserialize_dropnshop_ItemResponse,
+  },
+  getManyItems: {
+    path: '/dropnshop.ItemService/GetManyItems',
+    requestStream: false,
+    responseStream: false,
+    requestType: item_pb.GetManyItemsRequest,
+    responseType: item_pb.ListItemsResponse,
+    requestSerialize: serialize_dropnshop_GetManyItemsRequest,
+    requestDeserialize: deserialize_dropnshop_GetManyItemsRequest,
+    responseSerialize: serialize_dropnshop_ListItemsResponse,
+    responseDeserialize: deserialize_dropnshop_ListItemsResponse,
   },
   listItems: {
     path: '/dropnshop.ItemService/ListItems',

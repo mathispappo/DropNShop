@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as authService from './services/auth.service';
 import * as cartItemService from './services/cart-item.service';
 import * as itemService from './services/item.service';
-// import * as orderService from './services/order.service';
+import * as orderService from './services/order.service';
 import { validateSchema } from './middlewares/validate-schema';
 import { loginSchema, registerSchema } from './schemas/auth.schema';
 import passport from 'passport';
@@ -13,6 +13,7 @@ import {
 	updateItemRequestSchema,
 } from './schemas/item.schema';
 import { upsertCartItemRequestSchema, deleteCartItemRequestSchema } from './schemas/cart-item.schema';
+import { createOrderRequestSchema, getOrderRequestSchema } from './schemas/order.schema';
 
 const router = Router();
 
@@ -61,8 +62,18 @@ router.delete(
 );
 
 // Orders
-// router.post('/orders', ensureAuthenticated, orderService.create);
-// router.get('/orders', ensureAuthenticated, orderService.list);
-// router.get('/orders/:id', ensureAuthenticated, orderService.get);
+router.post(
+	'/orders',
+	passport.authenticate('jwt', { session: false }),
+	validateSchema(createOrderRequestSchema),
+	orderService.create,
+);
+router.get('/orders', passport.authenticate('jwt', { session: false }), orderService.list);
+router.get(
+	'/orders/:id',
+	passport.authenticate('jwt', { session: false }),
+	validateSchema(getOrderRequestSchema),
+	orderService.get,
+);
 
 export { router };
