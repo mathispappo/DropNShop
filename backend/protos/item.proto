@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package dropnshop;
+
+service ItemService {
+  rpc CreateItem (CreateItemRequest) returns (ItemResponse);
+  rpc GetItem (GetItemRequest) returns (ItemResponse);
+  rpc ListItems (ListItemsRequest) returns (ListItemsResponse);
+  rpc UpdateItem (UpdateItemRequest) returns (ItemResponse);
+  rpc DeleteItem (DeleteItemRequest) returns (DeleteItemResponse);
+}
+
+message Item {
+  int32 id = 1;
+  string title = 2;
+  string shortDescription = 3;
+  string longDescription = 4;
+  double price = 5;
+  string technicalSpecifications = 6;
+  string imageUrl = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message CreateItemRequest {
+  string title = 1;
+  string shortDescription = 2;
+  string longDescription = 3;
+  double price = 4;
+  string technicalSpecifications = 5;
+  string imageUrl = 6;
+}
+
+message GetItemRequest {
+  int32 id = 1;
+}
+
+message ListItemsRequest {}
+
+message UpdateItemRequest {
+  int32 id = 1;
+  string title = 2;
+  string shortDescription = 3;
+  string longDescription = 4;
+  double price = 5;
+  string technicalSpecifications = 6;
+  string imageUrl = 7;
+}
+
+message DeleteItemRequest {
+  int32 id = 1;
+}
+
+message ItemResponse {
+  Item item = 1;
+}
+
+message ListItemsResponse {
+  repeated Item items = 1;
+}
+
+message DeleteItemResponse {
+  bool success = 1;
+}
