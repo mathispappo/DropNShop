@@ -2,7 +2,7 @@ import React from 'react';
 import HomeBackground from "../../assets/background/background.png"
 import { Link } from 'react-router-dom';
 
-function HomePage() {
+const HomePage = () => {
   return (
     <div style={HomeStyles}>
       <div style={positionStyles}>

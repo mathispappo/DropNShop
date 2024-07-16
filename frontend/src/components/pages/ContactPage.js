@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../css/ContactPage.css';
 import Mathis from '../../assets/team/mathis.png';
 import Martin from '../../assets/team/martin.png';
 import Elliot from '../../assets/team/elliot.png';
 
-function ContactPage() {
+const ContactPage = () => {
   return (
     <div className="contact-page">
       <div className="contact-header">

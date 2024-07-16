@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState }  from 'react';
 import '../../css/BasketPage.css';
 import productImage1 from '../../assets/product/product1.png';
 import productImage2 from '../../assets/product/product2.png';
@@ -9,7 +9,22 @@ import stripe from '../../assets/payment/stripe.png';
 import mastercard from '../../assets/payment/mastercard.png';
 import bitcoin from '../../assets/payment/bitcoin.png';
 
-function BasketPage() {
+const BasketPage = () => {
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+
+    fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => setCartItems(data))
+      .catch(error => console.error('Error fetching cart items:', error));
+  }, []);
+
   return (
     <div className="basket-page">
       <div className="basket-container">
@@ -21,6 +36,11 @@ function BasketPage() {
             <span className='header-price'>Price</span>
           </div>
           <div className="product-item">
+            <ul>
+              {cartItems.map(item => (
+                <li key={item.id}>{item.title} - {item.quantity}</li>
+                ))}
+            </ul>
             <img src={productImage1} alt="Pointy Toe Mule with Mini Heel" />
             <div className="product-details">
               <h3>Pointy Toe Mule with Mini Heel</h3>

@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../css/ProductPage.css';
 import productImage from '../../assets/product/product1.png';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-function ProductPage() {
+const ProductPage = ({ match }) => {
+  const [product, setProduct] = useState(null);
+  const productId = match.params.id;
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_URL}/items/${productId}`)
+      .then(response => response.json())
+      .then(data => setProduct(data))
+      .catch(error => console.error('Error fetching product:', error));
+  }, [productId]);
+
+  if (!product) return <div>Loading...</div>;
+
   return (
     <div className="product-page">
       <div className="product-container">
         <div className="product-image">
-          <img src={productImage} alt="Pointy Toe Mule with Mini Heel" />
+          <img src={product.imageUrl} alt="Pointy Toe Mule with Mini Heel" />
         </div>
         <div className="product-details">
-          <h1>Pointy Toe Mule with Mini Heel</h1>
-          <p className="price">$286.00</p>
+          <h1>{product.title}</h1>
+          <p className="price">{product.price}</p>
           <p className="stock-status">In stock</p>
-          <p className="sku">SKU MK-F-008</p>
-          <p className="description">
-            Go kalles this summer with this vintage navy and white striped v-neck t-shirt from the Nike. Perfect for pairing with denim and white kicks for a stylish kalles vibe.
-          </p>
+          <p className="sku">{product.shortDescription}</p>
+          <p className="description">{product.longDescription}</p>
           <div className="quantity-selector">
             <label htmlFor="quantity">QUANTITY</label>
             <input type="number" id="quantity" name="quantity" min="1" defaultValue="1" />

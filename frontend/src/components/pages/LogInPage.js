@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import '../../css/LogInPage.css';
 import backgroundImage from '../../assets/background/login.png';
 
-function LoginPage() {
+const LoginPage = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.accessToken) {
+        localStorage.setItem('jwt', data.accessToken);
+        console.log('Logged in:', data); 
+      }
+    })
+    .catch(error => console.error('Error logging in:', error));
+  };
+
+
+// AJOUTER le lien vers /auth/google pour le bouton
+
   return (
     <div className="login-page">
       <div className="login-container">
@@ -10,22 +34,16 @@ function LoginPage() {
           <h1>Welcome back</h1>
           <p>Enter the information you entered while registering</p>
           <form>
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <label htmlFor="email">Username</label>
+            <input type="text" id="email" name="email" value={username} onChange={e => setUsername(e.target.value)} required />
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" required />
-            <div className="remember-forgot">
-              <label>
-                <input type="checkbox" name="remember" /> Remember me
-              </label>
-              <a href="/forgot-password">Forget password?</a>
-            </div>
-            <button type="submit" className="login-button">LOGIN</button>
+            <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required/>
+            <button onClick={handleLogin} type="submit" className="login-button">LOGIN</button>
           </form>
           <div className="alternative-login">
             <div className="divider">
               <span></span>
-            </div>
+            </div>            
             <button className="google-login">
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" />
               Sign in with Google

@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import '../../css/SignUpPage.css';
 import backgroundImage from '../../assets/background/login.png';
 
-function SignUpPage() {
+const SignUpPage = () => {
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, username, password }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.accessToken) {
+          localStorage.setItem('jwt', data.accessToken);
+          console.log('Registered:', data);
+          // Redirect or update state
+        }
+      })
+      .catch(error => console.error('Error registering:', error));
+  };
+
+// AJOUTER le lien vers /auth/google pour le bouton
+
   return (
     <div className="sign-up-page">
       <div className="sign-up-container">
@@ -11,12 +36,12 @@ function SignUpPage() {
           <p>Enter your details to create an account</p>
           <form>
             <label htmlFor="name">Name</label>
-            <input type="text" id="name" name="name" required />
+            <input type="text" id="name" name="name" value={username} onChange={e => setUsername(e.target.value)} required />
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <input type="email" id="email" name="email" value={email} onChange={e => setEmail(e.target.value)} required />
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" required />
-            <button type="submit" className="sign-up-button">SIGN UP</button>
+            <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required />
+            <button type="submit" className="sign-up-button" onClick={handleRegister} >SIGN UP</button>
           </form>
           <div className="alternative-login">
             <div className="divider">
