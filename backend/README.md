@@ -1,33 +1,134 @@
-# Node.js Authentication
+# Drop'n'Shop backend
 
-Implementation of node.js authentication with social login ✌️, user impersonation 💅, and no passport.js required 💁
+## Installation
 
-This is the example repository from the blog post ['🛑 You don't need passport.js - Guide to node.js authentication ✌️'](https://softwareontheroad.com/nodejs-jwt-authentication-oauth?utm_source=github&utm_medium=readme)
+1. Have Node.js >=18 installed
+2. Copy `.env.example` to `.env` and fill in the values (defaults are fine for local development)
+3. Run `npm install`
+4. Ensure the DB manager is up and running first
+5. Run `npm run dev` to start the backend server
 
-Please read the blog post in order to have a good understanding of the server architecture.
+## API
 
+### Authentication
 
-## Development
+#### `POST /auth/register`
 
-We use `node` version `10.15.0`
-
+Registers a new user.
+Body:
+```json
+{
+  "email": "john.doe@gmail.com",
+  "username": "johndoe",
+  "password": "password"
+}
 ```
-nvm install 10.15.0
+Returns an object with the JWT (`accessToken`) and the user's data.
+
+#### `POST /auth/login`
+
+Logs in a user.
+Body:
+```json
+{
+  "username": "johndoe",
+  "password": "password"
+}
+```
+Returns an object with the JWT (`accessToken`) and the user's data.
+
+#### `GET /auth/me`
+
+Returns the current user's data. Requires a valid JWT in the `Authorization` header.
+
+#### `GET /auth/google`
+
+Redirects to Google's OAuth2 login page.
+
+#### `GET /auth/google/callback`
+
+Callback URL for Google's OAuth2 login. Redirects to the frontend with the JWT in the URL.
+
+### Items
+
+#### `GET /items`
+
+Returns all items.
+
+#### `GET /items/:id`
+
+Returns an item by ID.
+
+#### `POST /items`
+
+Creates a new item. Requires a valid JWT in the `Authorization` header.
+Body:
+```json
+{
+  "title": "Item title",
+  "shortDescription": "Short description",
+  "longDescription": "Long description",
+  "price": 100,
+  "technicalSpecifications": {
+    "key1": "value1",
+    "key2": "value2"
+  },
+  "imageUrl": "https://example.com/image.jpg"
+}
 ```
 
-```
-nvm use 10.15.0
+#### `PATCH /items/:id`
+
+Updates an item by ID. Requires a valid JWT in the `Authorization` header.
+Same body as `POST /items`, but only put the fields you want to update.
+
+#### `DELETE /items/:id`
+
+Deletes an item by ID. Requires a valid JWT in the `Authorization` header.
+
+### Cart Items
+
+#### `GET /cart-items`
+
+Returns all cart items for the current user. Requires a valid JWT in the `Authorization` header.
+
+#### `PUT /cart-items`
+
+Adds or update an item to the cart. Requires a valid JWT in the `Authorization` header.
+Body:
+```json
+{
+  "itemId": 1,
+  "quantity": 1
+}
 ```
 
-The first time, you will need to run
+#### `DELETE /cart-items/:id`
 
-```
-npm install
-```
+Deletes a cart item by ID. Requires a valid JWT in the `Authorization` header.
 
-Then just start the server with 
+### Orders
 
+#### `GET /orders`
+
+Returns all orders for the current user. Requires a valid JWT in the `Authorization` header.
+
+#### `GET /orders/:id`
+
+Returns an order by ID. Requires a valid JWT in the `Authorization` header.
+
+#### `POST /orders`
+
+Creates a new order. Requires a valid JWT in the `Authorization` header.
+Body:
+```json
+{
+  "orderLines": [
+    {
+      "itemId": 1,
+      "quantity": 1
+    }
+  ],
+  "shippingAddress": "123 Main St, Springfield, IL 62701"
+}
 ```
-npm run start
-```
-It uses nodemon for livereloading :peace-fingers:
