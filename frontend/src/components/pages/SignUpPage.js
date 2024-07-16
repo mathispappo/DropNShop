@@ -6,6 +6,8 @@ const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleRegister = (evt) => {
     evt.preventDefault();
@@ -21,10 +23,15 @@ const SignUpPage = () => {
         if (data.accessToken) {
           localStorage.setItem('jwt', data.accessToken);
           console.log('Registered:', data);
-          // Redirect or update state
+          setSuccessMessage('Account created successfully!');
+          setErrorMessage('');
         }
       })
-      .catch(error => console.error('Error registering:', error));
+      .catch(error => {
+        console.error('Error registering:', error);
+        setErrorMessage('An error occurred during registration.');
+        setSuccessMessage('');
+      });
   };
 
 // AJOUTER le lien vers /auth/google pour le bouton
@@ -36,7 +43,7 @@ const SignUpPage = () => {
           <h1>Join us</h1>
           <p>Enter your details to create an account</p>
           <form>
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Username</label>
             <input type="text" id="name" name="name" value={username} onChange={e => setUsername(e.target.value)} required />
             <label htmlFor="email">Email</label>
             <input type="email" id="email" name="email" value={email} onChange={e => setEmail(e.target.value)} required />
@@ -44,6 +51,8 @@ const SignUpPage = () => {
             <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required />
             <button type="submit" className="sign-up-button" onClick={handleRegister} >SIGN UP</button>
           </form>
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <div className="alternative-login">
             <div className="divider">
               <span></span>

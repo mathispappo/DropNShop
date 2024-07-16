@@ -152,3 +152,12 @@
     font-weight: normal;
   }
   
+  .success-message {
+    color: green !important;
+  }
+
+  
+  .error-message {
+    color: red !important;
+  }
+  

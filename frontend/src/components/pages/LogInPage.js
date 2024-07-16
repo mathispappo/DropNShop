@@ -5,6 +5,8 @@ import backgroundImage from '../../assets/background/login.png';
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  
 
   const handleLogin = (evt) => {
     evt.preventDefault();
@@ -20,9 +22,16 @@ const LoginPage = () => {
       if (data.accessToken) {
         localStorage.setItem('jwt', data.accessToken);
         console.log('Logged in:', data);
+        setErrorMessage('');
+        window.location.href = '/basket';
+      } else {
+        setErrorMessage('Invalid username or password.');
       }
     })
-    .catch(error => console.error('Error logging in:', error));
+    .catch(error => {
+      console.error('Error logging in:', error);
+      setErrorMessage('An error occurred during login.');
+    });
   };
 
 
@@ -41,6 +50,7 @@ const LoginPage = () => {
             <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} required/>
             <button onClick={handleLogin} type="submit" className="login-button">LOGIN</button>
           </form>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <div className="alternative-login">
             <div className="divider">
               <span></span>

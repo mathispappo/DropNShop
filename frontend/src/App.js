@@ -22,7 +22,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/basket" element={<BasketPage />} />
-        <Route path='/product1' element={<ProductPage />} />
+        <Route path='/product/:id' element={<ProductPage />} />
       </Routes>
     </Router>
   );

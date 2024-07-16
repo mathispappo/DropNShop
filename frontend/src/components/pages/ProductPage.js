@@ -4,18 +4,40 @@ import productImage from '../../assets/product/product1.png';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
-const ProductPage = ({ match }) => {
+const ProductPage = () => {
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const productId = match.params.id;
+  const [quantity, setQuantity] = useState(1);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/items/${productId}`)
-      .then(response => response.json())
+    fetch(`${process.env.REACT_APP_API_URL}/items/${id}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => setProduct(data))
-      .catch(error => console.error('Error fetching product:', error));
-  }, [productId]);
+      .catch(error => {
+        console.error('Error fetching product:', error);
+        setError(error.message);
+      });
+  }, [id]);
 
-  if (!product) return <div>Loading...</div>;
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
+  };
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
+
+  const subtotal = product.price * quantity;
 
   return (
     <div className="product-page">
@@ -30,10 +52,9 @@ const ProductPage = ({ match }) => {
           <p className="sku">{product.shortDescription}</p>
           <p className="description">{product.longDescription}</p>
           <div className="quantity-selector">
-            <label htmlFor="quantity">QUANTITY</label>
-            <input type="number" id="quantity" name="quantity" min="1" defaultValue="1" />
-          </div>
-          <p className="subtotal">Subtotal: $286.00</p>
+        <label htmlFor="quantity">QUANTITY</label>
+        <input type="number" id="quantity" name="quantity" min="1" value={quantity} onChange={handleQuantityChange}/> </div>
+          <p className="subtotal">Subtotal: ${subtotal.toFixed(2)}</p>
           <Link to="/basket">
             <button className="buy-now-button">BUY NOW</button>
           </Link>
