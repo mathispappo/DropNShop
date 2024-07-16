@@ -7,7 +7,8 @@ const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
+  const handleRegister = (evt) => {
+    evt.preventDefault();
     fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
       method: 'POST',
       headers: {

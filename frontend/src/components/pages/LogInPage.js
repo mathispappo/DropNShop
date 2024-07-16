@@ -6,7 +6,8 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = (evt) => {
+    evt.preventDefault();
     fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: 'POST',
       headers: {
@@ -18,7 +19,7 @@ const LoginPage = () => {
     .then(data => {
       if (data.accessToken) {
         localStorage.setItem('jwt', data.accessToken);
-        console.log('Logged in:', data); 
+        console.log('Logged in:', data);
       }
     })
     .catch(error => console.error('Error logging in:', error));
@@ -43,7 +44,7 @@ const LoginPage = () => {
           <div className="alternative-login">
             <div className="divider">
               <span></span>
-            </div>            
+            </div>
             <button className="google-login">
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" />
               Sign in with Google
