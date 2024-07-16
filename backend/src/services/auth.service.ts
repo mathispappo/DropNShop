@@ -52,8 +52,7 @@ function googleRedirect(req: Request, res: Response) {
 
 		const accessToken = jwt.sign({ id: user.id }, env.JWT_SECRET, { expiresIn: '7d' });
 
-		res.json({ accessToken, user });
-		return;
+		res.redirect(`${env.FRONTEND_URL}/auth/google?accessToken=${accessToken}`);
 	})(req, res);
 }
 

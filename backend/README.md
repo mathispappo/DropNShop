@@ -12,6 +12,9 @@
 
 ### Authentication
 
+For endpoints that require login, it is expected that a valid JWT be given in the `Authorization` header
+with a bearer, such as `Authorization: Bearer your_jwt`
+
 #### `POST /auth/register`
 
 Registers a new user.
@@ -47,7 +50,10 @@ Redirects to Google's OAuth2 login page.
 
 #### `GET /auth/google/callback`
 
-Callback URL for Google's OAuth2 login. Redirects to the frontend with the JWT in the URL.
+Callback URL for Google's OAuth2 login. Redirects to the frontend on URL `/auth/google` with
+the JWT in the params: `/auth/google?accessToken=...`.
+The frontend must extract this token to be reused in subsequent queries, and redirect the user
+to a more appropriate URL, like its cart.
 
 ### Items
 
