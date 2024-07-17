@@ -34,9 +34,6 @@ const LoginPage = () => {
     });
   };
 
-
-// AJOUTER le lien vers /auth/google pour le bouton
-
   return (
     <div className="login-page">
       <div className="login-container">
@@ -55,7 +52,7 @@ const LoginPage = () => {
             <div className="divider">
               <span></span>
             </div>
-            <button className="google-login">
+            <button className="google-login" onClick={() => window.location.href = '/auth/google'}>
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" />
               Sign in with Google
             </button>

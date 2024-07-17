@@ -11,19 +11,120 @@ import bitcoin from '../../assets/payment/bitcoin.png';
 
 const BasketPage = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [coupon, setCoupon] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [delivery, setDelivery] = useState(29.99);
+  const [tax, setTax] = useState(0);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
+    const fetchCartItems = async () => {
+      try {
+        const jwt = localStorage.getItem('jwt');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setCartItems(data);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+        setError('Error fetching cart items.');
+      }
+    };
 
-    fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    })
-      .then(response => response.json())
-      .then(data => setCartItems(data))
-      .catch(error => console.error('Error fetching cart items:', error));
+    fetchCartItems();
   }, []);
+
+  useEffect(() => {
+    const calculateTotals = () => {
+      const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      const calculatedTax = subtotal * 0.1; // Assume a 10% tax rate
+      const calculatedTotal = subtotal - discount + delivery + calculatedTax;
+
+      setTax(calculatedTax);
+      setTotal(calculatedTotal);
+    };
+
+    calculateTotals();
+  }, [cartItems, discount, delivery]);
+
+  const handleUpdateQuantity = async (itemId, quantity) => {
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ itemId, quantity }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const updatedItem = await response.json();
+      setCartItems(cartItems.map(item => (item.id === itemId ? updatedItem : item)));
+    } catch (error) {
+      console.error('Error updating cart item:', error);
+      setError('Error updating cart item.');
+    }
+  };
+
+  const handleDeleteItem = async (itemId) => {
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setCartItems(cartItems.filter(item => item.id !== itemId));
+    } catch (error) {
+      console.error('Error deleting cart item:', error);
+      setError('Error deleting cart item.');
+    }
+  };
+
+  const handleCancelOrder = async () => {
+    try {
+      const jwt = localStorage.getItem('jwt');
+      for (const item of cartItems) {
+        await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${item.id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+      }
+      setCartItems([]);
+      setMessage('Order canceled successfully.');
+    } catch (error) {
+      console.error('Error canceling order:', error);
+      setError('Error canceling order.');
+    }
+  };
+
+  const handleApplyCoupon = (evt) => {
+    evt.preventDefault();
+    console.log('Applying coupon:', coupon); 
+    setCouponError('Wrong coupon code, please enter another one.');
+  };
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="basket-page">
@@ -35,80 +136,41 @@ const BasketPage = () => {
             <span className='header-quantity'>Quantity</span>
             <span className='header-price'>Price</span>
           </div>
-          <div className="product-item">
-            <ul>
-              {cartItems.map(item => (
-                <li key={item.id}>{item.title} - {item.quantity}</li>
-                ))}
-            </ul>
-            <img src={productImage1} alt="Pointy Toe Mule with Mini Heel" />
+          {cartItems.map(item => (
+          <div key={item.id} className="product-item">
+            <img src={item.imageUrl} alt={item.title} />
             <div className="product-details">
-              <h3>Pointy Toe Mule with Mini Heel</h3>
+              <h3>{item.title}</h3>
             </div>
             <div className="quantity">
-              <button className="quantity-button">-</button>
-              <input type="text" value="2" readOnly />
-              <button className="quantity-button">+</button>
+              <button className="quantity-button" onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+              <input type="text" value={item.quantity} readOnly />
+              <button
+                className="quantity-button"
+                onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+              >+</button>
             </div>
-            <div className="price">$572.00</div>
-            <button className="remove-button">🗑️</button>
+            <div className="price">${(item.price || 0).toFixed(2)}</div>
+            <button className="remove-button" onClick={() => handleDeleteItem(item.id)}>🗑️</button>
           </div>
-          <div className="product-item">
-            <img src={productImage2} alt="Louis Vuitton Speedy 30 Monogram Canvas Bag" />
-            <div className="product-details">
-              <h3>Louis Vuitton Speedy 30 Monogram Canvas Bag</h3>
-            </div>
-            <div className="quantity">
-              <button className="quantity-button">-</button>
-              <input type="text" value="1" readOnly />
-              <button className="quantity-button">+</button>
-            </div>
-            <div className="price">$109.99</div>
-            <button className="remove-button">🗑️</button>
-          </div>
-          <div className="product-item">
-            <img src={productImage3} alt="Rolex Submariner Date 18k Yellow Gold Blue Dial" />
-            <div className="product-details">
-              <h3>Rolex Submariner Date 18k Yellow Gold Blue Dial</h3>
-            </div>
-            <div className="quantity">
-              <button className="quantity-button">-</button>
-              <input type="text" value="1" readOnly />
-              <button className="quantity-button">+</button>
-            </div>
-            <div className="price">$349.99</div>
-            <button className="remove-button">🗑️</button>
-          </div>
-          <div className="product-item">
-            <img src={productImage4} alt="Red Patent Leather Handbag with Gold Handle" />
-            <div className="product-details">
-              <h3>Red Patent Leather Handbag with Gold Handle</h3>
-            </div>
-            <div className="quantity">
-              <button className="quantity-button">-</button>
-              <input type="text" value="1" readOnly />
-              <button className="quantity-button">+</button>
-            </div>
-            <div className="price">$199.99</div>
-            <button className="remove-button">🗑️</button>
-          </div>
+          ))}
           <div className="buttons">
-            <button className="back-button">Back</button>
-            <button className="cancel-button">Cancel Order</button>
+          <button className="back-button" onClick={() => window.history.back()}>Back</button>
+          <button className="cancel-button" onClick={handleCancelOrder}>Cancel Order</button>
           </div>
         </div>
         <div className="summary-section">
           <div className="coupon-code">
             <h3>Coupon Code</h3>
-            <input type="text" placeholder="Enter Your Coupon Code" />
-            <button>Apply Your Coupon</button>
+            <input type="text" placeholder="Enter your coupon code" value={coupon} onChange={(e) => setCoupon(e.target.value)}/>
+            <button className="apply-coupon-button" onClick={handleApplyCoupon}>Apply Your Coupon</button>
           </div>
           <div className="order-summary">
             <h3>Order Summary</h3>
-            <p>Discount: <span>$0.00</span></p>
-            <p>Delivery: <span>$29.99</span></p>
-            <p>Tax: <span>$39.99</span></p>
-            <h2>Total: <span>$1879.93</span></h2>
+            <p>Discount: <span>${discount.toFixed(2)}</span></p>
+        <p>Delivery: <span>${delivery.toFixed(2)}</span></p>
+        <p>Tax: <span>${tax.toFixed(2)}</span></p>
+        <h2>Total: <span>${total.toFixed(2)}</span></h2>
           </div>
           <div className="payment-method">
             <h3>Payment Method</h3>

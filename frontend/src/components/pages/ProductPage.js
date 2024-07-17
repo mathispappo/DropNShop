@@ -9,6 +9,7 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/items/${id}`)
@@ -27,6 +28,32 @@ const ProductPage = () => {
 
   const handleQuantityChange = (event) => {
     setQuantity(event.target.value);
+  };
+
+  const handleBuyNow = (evt) => {
+    const jwt = localStorage.getItem('jwt');
+    evt.preventDefault();
+    fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`
+      },
+      body: JSON.stringify({ itemId: Number(id), quantity: Number(quantity) }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setMessage('Item added to the basket successfully!');
+      })
+      .catch(error => {
+        console.error('Error adding item to basket:', error);
+        setMessage('Error adding item to basket.');
+      });
   };
 
   if (error) {
@@ -56,7 +83,7 @@ const ProductPage = () => {
         <input type="number" id="quantity" name="quantity" min="1" value={quantity} onChange={handleQuantityChange}/> </div>
           <p className="subtotal">Subtotal: ${subtotal.toFixed(2)}</p>
           <Link to="/basket">
-            <button className="buy-now-button">BUY NOW</button>
+            <button className="buy-now-button" onClick={handleBuyNow} >BUY NOW</button>
           </Link>
           <div className="terms">
             <input type="checkbox" id="terms" name="terms" />
