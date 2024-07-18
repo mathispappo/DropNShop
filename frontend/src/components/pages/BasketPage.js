@@ -88,8 +88,6 @@ const handleUpdateQuantity = async (itemId, quantity) => {
     setError(`Error updating cart item: ${error.message}`);
   }
 };
-  
-  
 
 const handleDeleteItem = async (itemId) => {
   try {
@@ -189,9 +187,9 @@ const handleDeleteItem = async (itemId) => {
           <div className="order-summary">
             <h3>Order Summary</h3>
             <p>Discount: <span>${discount.toFixed(2)}</span></p>
-        <p>Delivery: <span>${delivery.toFixed(2)}</span></p>
-        <p>Tax: <span>${tax.toFixed(2)}</span></p>
-        <h2>Total: <span>${total.toFixed(2)}</span></h2>
+            <p>Delivery: <span>${delivery.toFixed(2)}</span></p>
+            <p>Tax: <span>${tax.toFixed(2)}</span></p>
+            <h2>Total: <span>${total.toFixed(2)}</span></h2>
           </div>
           <div className="payment-method">
             <h3>Payment Method</h3>
@@ -202,6 +200,12 @@ const handleDeleteItem = async (itemId) => {
               <img src={bitcoin} alt="Bitcoin" />
             </div>
             <button className="checkout-button">Check Out</button>
+          </div>
+          <div className="last-order">
+            <h3>Last Order</h3>
+            <p>Order Number: <span>123456</span></p>
+            <p>Order Date: <span>01/01/2021</span></p>
+            <p>Order Total: <span>$100.00</span></p>
           </div>
         </div>
       </div>

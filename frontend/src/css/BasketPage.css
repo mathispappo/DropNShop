@@ -4,7 +4,7 @@
   align-items: flex-start;
   background-color: #f0f0f0;
   padding: 90px 0;
-  height: 77vh;
+  height: 100%;
 }
 
 .basket-container {
@@ -19,6 +19,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-right: 20px;
+  height: 700px;
 }
 
 .product-list h2 {
@@ -54,6 +55,7 @@
   padding: 10px;
   border-radius: 15px;
   margin-bottom: 10px;
+  min-width: 300px;
 }
 
 .product-item img {
@@ -142,7 +144,8 @@
 
 .coupon-code,
 .order-summary,
-.payment-method {
+.payment-method,
+.last-order {
   background-color: white;
   padding: 1px 20px 20px 20px;
   border-radius: 10px;
@@ -152,7 +155,8 @@
 
 .coupon-code h3,
 .order-summary h3,
-.payment-method h3 {
+.payment-method h3,
+.last-order h3 {
   font-size: 1.2em;
   margin-bottom: 10px;
   border-bottom: 1px solid #ddd;
