@@ -15,6 +15,7 @@ const BasketPage = () => {
   const [delivery] = useState(29.99);
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
+  const [lastOrder, setLastOrder] = useState(null);
 
   const fetchCartItems = async () => {
     try {
@@ -38,6 +39,7 @@ const BasketPage = () => {
 
   useEffect(() => {
     fetchCartItems();
+    fetchLastOrder();
   }, []);
 
   useEffect(() => {
@@ -188,6 +190,26 @@ const handleCancelOrder = async () => {
     }
   };
 
+  const fetchLastOrder = async () => {
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/orders`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setLastOrder(data[data.length - 1]);
+    } catch (error) {
+      console.error('Error fetching last order:', error);
+      setError('Error fetching last order.');
+    }
+  };
+  
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -261,12 +283,17 @@ const handleCancelOrder = async () => {
             </div>
             <button className="checkout-button" onClick={handleCheckout} >Check Out</button>
           </div>
-          <div className="last-order">
-            <h3>Last Order</h3>
-            <p>Order Number: <span>123456</span></p>
-            <p>Order Date: <span>01/01/2021</span></p>
-            <p>Order Total: <span>$100.00</span></p>
-          </div>
+
+          {lastOrder && (
+      <div className="last-order">
+        <h3>Last Order</h3>
+        <p>Order Number: <span>{lastOrder.id}</span></p>
+        <p>Order Date: <span>{lastOrder.createdAt ? new Date(lastOrder.createdAt).toLocaleDateString() : 'N/A'}</span></p>
+      
+        <p>Total: <span>${lastOrder.orderLines.reduce((acc, line) => acc + line.price + line.price*0.1 + 29.99, 0).toFixed(2)}</span></p>
+
+        </div>
+        )}
         </div>
       </div>
 
