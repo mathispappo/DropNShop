@@ -3,7 +3,7 @@
 ## Installation
 
 1. Have Node.js >=18 installed
-2. Copy `.env.example` to `.env` and fill in the values (defaults are fine for local development)
+2. Copy `.env.example` to `.env` and fill in the values (defaults are fine for local development, except for the Google OAuth credentials)
 3. Run `npm install`
 4. Ensure the DB manager is up and running first
 5. Run `npm run dev` to start the backend server
