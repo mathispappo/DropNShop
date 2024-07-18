@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  pg-db:
+    image: postgres:latest
+    container_name: pg-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  dbmanager:
+    container_name: dbmanager
+
+    build:
+      context: ./db_manager
+      dockerfile: Dockerfile
+
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "50051:50051"
+
+  backend:
+    container_name: backend
+
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_PORT: ${BACKEND_PORT}
+
+    environment:
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_PORT: ${BACKEND_PORT}
+      FRONTEND_URL: ${FRONTEND_URL}
+      GRPC_URL: ${GRPC_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    ports:
+      - "${BACKEND_CONTAINER_PORT}:${BACKEND_PORT}"
+
+  frontend:
+    container_name: frontend
+
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_URL: ${BACKEND_URL}
+
+    environment:
+      BACKEND_URL: ${BACKEND_URL}
+    ports:
+      - "${FRONTEND_CONTAINER_PORT}:${FRONTEND_PORT}"
+

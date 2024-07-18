@@ -25,6 +25,6 @@ server.addService(protoDefinitions.ItemService.service, itemService);
 server.addService(protoDefinitions.OrderService.service, orderService);
 server.addService(protoDefinitions.UserService.service, userService);
 
-server.bindAsync('127.0.0.1:50051', grpc.ServerCredentials.createInsecure(), () => {
-	console.info('Server running at http://127.0.0.1:50051');
+server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+	console.info('Server running at http://0.0.0.0:50051');
 });
