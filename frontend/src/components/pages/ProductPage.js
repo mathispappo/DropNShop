@@ -54,6 +54,9 @@ const ProductPage = () => {
         console.error('Error adding item to basket:', error);
         setMessage('Error adding item to basket.');
       });
+
+
+
   };
 
   if (error) {

@@ -188,6 +188,8 @@ const handleCancelOrder = async () => {
       setError('Error during checkout.');
       setMessage('');
     }
+    
+    window.location.reload();
   };
 
   const fetchLastOrder = async () => {
@@ -290,7 +292,7 @@ const handleCancelOrder = async () => {
         <p>Order Number: <span>{lastOrder.id}</span></p>
         <p>Order Date: <span>{lastOrder.createdAt ? new Date(lastOrder.createdAt).toLocaleDateString() : 'N/A'}</span></p>
       
-        <p>Total: <span>${lastOrder.orderLines.reduce((acc, line) => acc + line.price + line.price*0.1 + 29.99, 0).toFixed(2)}</span></p>
+        <p>Total: <span>${lastOrder.orderLines.reduce((acc, line) => acc + line.price + (line.price*0.1) + 29.99, 0).toFixed(2)}</span></p>
 
         </div>
         )}

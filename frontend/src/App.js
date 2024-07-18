@@ -8,6 +8,7 @@ import BasketPage from './components/pages/BasketPage';
 import MenuBar from './components/MenuBar';
 import ProductPage from './components/pages/ProductPage';
 import SignUpPage from './components/pages/SignUpPage';
+import GooglePage from './components/pages/GooglePage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/basket" element={<BasketPage />} />
         <Route path='/product/:id' element={<ProductPage />} />
+        <Route path="/auth/google" element={<GooglePage />} />
       </Routes>
     </Router>
   );

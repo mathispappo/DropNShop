@@ -22,8 +22,8 @@ const LoginPage = () => {
       if (data.accessToken) {
         localStorage.setItem('jwt', data.accessToken);
         console.log('Logged in:', data);
-        setErrorMessage('');
         window.location.href = '/shop';
+        setErrorMessage('');
       } else {
         setErrorMessage('Invalid username or password.');
       }

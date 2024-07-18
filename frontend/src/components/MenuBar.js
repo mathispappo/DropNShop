@@ -4,6 +4,7 @@ import { BiHome } from "react-icons/bi";
 
 
 const MenuBar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
   useEffect(() => {
@@ -11,6 +12,7 @@ const MenuBar = () => {
       try {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
+          setIsLoggedIn(true);
           const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/me`, {
             headers: {
               Authorization: `Bearer ${jwt}`,
@@ -18,8 +20,7 @@ const MenuBar = () => {
           });
           if (response.ok) {
             const data = await response.json();
-            //setUsername(data.user.username);
-            setUsername(data.username);
+            setUsername(data.user.username);
           } else {
             console.error('Failed to fetch user data');
           }
@@ -32,6 +33,12 @@ const MenuBar = () => {
     fetchUserData();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    setIsLoggedIn(false);
+    window.location.href = '/';
+  };
+
   return (
     <div style={menuStyle}>
       <div style={leftMenuStyle}>
@@ -43,13 +50,15 @@ const MenuBar = () => {
       <div style={centerMenuStyle}>
         <Link to="/shop" style={linkStyle}>Shop</Link>
         <Link to="/contact" style={linkStyle}>Contact</Link>
-        <Link to="/basket" style={linkStyle}>Basket</Link>
+        {isLoggedIn && (<Link to="/basket" style={linkStyle}>Basket</Link>)}
       </div>
       <div style={rightMenuStyle}>
-        <button style={searchButtonStyle}>🔍 Search</button>
+      {isLoggedIn && (
+            <button onClick={handleLogout} style={searchButtonStyle}>Logout</button>
+          )}
         <Link to="/login" style={loginStyle}>{username ? `Hello, ${username}` : 'Login'}</Link>
+        </div>
       </div>
-    </div>
   );
 }
 
@@ -100,11 +109,15 @@ const linkStyle = {
 };
 
 const searchButtonStyle = {
-  background: 'none',
-  border: 'none',
-  fontSize: '20px',
+  backgroundColor: 'white',
+  fontSize: '18px',
   cursor: 'pointer',
-  marginRight: '15px',
+  textDecoration: 'none',
+  marginRight: '20px',
+  padding: '5px 10px',
+  color: '#253C4A',
+  border: '1px solid #253C4A',
+  borderRadius: '25px',
 };
 
 const loginStyle = {
