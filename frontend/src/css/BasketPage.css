@@ -20,6 +20,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-right: 20px;
   height: 700px;
+  min-width: 70%;
 }
 
 .product-list h2 {
@@ -151,6 +152,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  max-width: 100%;
 }
 
 .coupon-code h3,
@@ -182,6 +184,11 @@
   cursor: pointer;
 }
 
+.coupon-code button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
 .order-summary p,
 .order-summary h2 {
   display: flex;
@@ -209,6 +216,11 @@
   border-radius: 5px;
 }
 
+.payment-icons img:hover {
+  cursor: pointer;
+  border: #007bff 2px solid;
+}
+
 .payment-method button {
   width: 100%;
   padding: 10px;
@@ -223,6 +235,10 @@
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.payment-method .checkout-button:hover {
+  background-color: #0056b3;
 }
 
 .error-input {
