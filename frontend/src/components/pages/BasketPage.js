@@ -108,23 +108,23 @@ const handleDeleteItem = async (itemId) => {
   }
 };
 
-  const handleCancelOrder = async () => {
-    try {
-      const jwt = localStorage.getItem('jwt');
-      for (const item of cartItems) {
-        await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${item.id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        });
-      }
-      setCartItems([]);
-      setMessage('Order canceled successfully.');
-    } catch (error) {
-      console.error('Error canceling order:', error);
-      setError('Error canceling order.');
+const handleCancelOrder = async () => {
+  try {
+    const jwt = localStorage.getItem('jwt');
+    for (const item of cartItems) {
+      await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${item.id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
     }
+    setCartItems([]);
+    setMessage('Order canceled successfully.');
+  } catch (error) {
+    console.error('Error canceling order:', error);
+    setError('Error canceling order.');
+  }
   };
 
   const handleApplyCoupon = (evt) => {
@@ -133,50 +133,110 @@ const handleDeleteItem = async (itemId) => {
     setCouponError('Wrong coupon code, please enter another one.');
   };
 
+  const handleCheckout = async () => {
+    try {
+      setMessage('Processing payment...');
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate 3 seconds delay
+
+      const jwt = localStorage.getItem('jwt');
+      if (!jwt) {
+        throw new Error('JWT not found');
+      }
+
+      const orderLines = cartItems.map(item => ({
+        itemId: item.item.id,
+        quantity: item.quantity,
+      }));
+
+      const payload = {
+        orderLines,
+        shippingAddress: ""
+      };
+
+      // Add all cart items to orderline
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Backend error:', errorData);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message}`);
+      }
+
+      // Clear the basket
+      for (const item of cartItems) {
+        await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${item.id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+      }
+
+      setCartItems([]);
+      setMessage('Payment successful and order placed!');
+    } catch (error) {
+      console.error('Error during checkout:', error);
+      setError('Error during checkout.');
+      setMessage('');
+    }
+  };
+
   if (error) {
     return <div>{error}</div>;
   }
 
   return (
     <div className="basket-page">
-      {!cartItems.length ? (
-        <div className="empty-basket">
-          <h2>Your basket is empty</h2>
-          <p>Go back to the <a href="/shop">shop</a> to add items</p>
-        </div>
-      ) : (
         <div className="basket-container">
           <div className="product-list">
             <h2>Shopping Cart</h2>
             {message && <p className="success-message">{message}</p>}
-            <div className="product-header">
-              <span className='header-product'>Product</span>
-              <span className='header-quantity'>Quantity</span>
-              <span className='header-price'>Price</span>
+            {!cartItems.length ? (
+            <div className="empty-basket">
+              <h2>Your basket is empty</h2>
+              <p>Go back to the <a href="/shop">shop</a> to add items</p>
             </div>
-            {cartItems.map(item => (
-            <div key={item.id} className="product-item">
-              <img src={item.item.imageUrl} alt={item.item.title} />
-              <div className="product-details">
-              <h3>{item.item.title}</h3>
-              </div>
-              <div className="quantity">
-                <button className="quantity-button" onClick={() => handleUpdateQuantity(item.item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
-                <input type="text" value={item.quantity} readOnly />
-                <button
-                  className="quantity-button"
-                  onClick={() => handleUpdateQuantity(item.item.id, item.quantity + 1)}
-                >+</button>
-              </div>
-              <div className="price">${Math.floor(item.item.price)}</div>
-              <button className="remove-button" onClick={() => handleDeleteItem(item.id)}>🗑️</button>
-            </div>
+            ) : (
+              <>
+                <div className="product-header">
+                  <span className='header-product'>Product</span>
+                  <span className='header-quantity'>Quantity</span>
+                  <span className='header-price'>Price</span>
+                </div>
+                {cartItems.map(item => (
+                <div key={item.id} className="product-item">
+                  <img src={item.item.imageUrl} alt={item.item.title} />
+                  <div className="product-details">
+                  <h3>{item.item.title}</h3>
+                  </div>
+                  <div className="quantity">
+                    <button className="quantity-button" onClick={() => handleUpdateQuantity(item.item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+                    <input type="text" value={item.quantity} readOnly />
+                    <button
+                      className="quantity-button"
+                      onClick={() => handleUpdateQuantity(item.item.id, item.quantity + 1)}
+                    >+</button>
+                  </div>
+                  <div className="price">${Math.floor(item.item.price)}</div>
+                  <button className="remove-button" onClick={() => handleDeleteItem(item.id)}>🗑️</button>
+                </div>
             ))}
             <div className="buttons">
             <button className="back-button" onClick={() => window.history.back()}>Back</button>
             <button className="cancel-button" onClick={handleCancelOrder}>Cancel Order</button>
-            </div>
-          </div>
+            </div>           
+          </>
+        )}
+        </div>
+      
+            
         <div className="summary-section">
           <div className="coupon-code">
             <h3>Coupon Code</h3>
@@ -199,7 +259,7 @@ const handleDeleteItem = async (itemId) => {
               <img src={mastercard} alt="MasterCard" />
               <img src={bitcoin} alt="Bitcoin" />
             </div>
-            <button className="checkout-button">Check Out</button>
+            <button className="checkout-button" onClick={handleCheckout} >Check Out</button>
           </div>
           <div className="last-order">
             <h3>Last Order</h3>
@@ -209,7 +269,7 @@ const handleDeleteItem = async (itemId) => {
           </div>
         </div>
       </div>
-      )}
+
     </div>
   );
 }

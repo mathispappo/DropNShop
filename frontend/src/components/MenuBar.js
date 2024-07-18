@@ -18,6 +18,7 @@ const MenuBar = () => {
           });
           if (response.ok) {
             const data = await response.json();
+            //setUsername(data.user.username);
             setUsername(data.username);
           } else {
             console.error('Failed to fetch user data');
@@ -30,7 +31,6 @@ const MenuBar = () => {
 
     fetchUserData();
   }, []);
-
 
   return (
     <div style={menuStyle}>
