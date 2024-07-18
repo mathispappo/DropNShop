@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'Google Sans';
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCIhM907w.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; /* This helps with loading */
+}
+
+body {
+  font-family: 'Google Sans', sans-serif;
+}
+
+
 .sign-up-page {
     display: flex;
     height: 100vh;
@@ -160,4 +173,6 @@
   .error-message {
     color: red !important;
   }
+  
+
   

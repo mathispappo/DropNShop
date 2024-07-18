@@ -4,10 +4,6 @@ import bags from '../../assets/category/bags.png';
 import shoes from '../../assets/category/shoes.png';
 import cosmetics from '../../assets/category/cosmetics.png';
 import electronics from '../../assets/category/electronics.png';
-import product1 from '../../assets/product/product1.png';
-import product2 from '../../assets/product/product2.png';
-import product3 from '../../assets/product/product3.png';
-import product4 from '../../assets/product/product4.png';
 import { Link } from 'react-router-dom';
 
 
@@ -57,7 +53,7 @@ const ShopPage = () => {
         <div className="products">
           {products.map(product => (
             <Link to={`/product/${product.id}`} key={product.id} className="product">
-                <img src={product.imageUrl} alt="Product 1" />
+                <img src={product.imageUrl} alt="Product" />
                 <p>-10%</p>
             </Link>
           ))}

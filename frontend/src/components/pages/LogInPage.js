@@ -23,7 +23,7 @@ const LoginPage = () => {
         localStorage.setItem('jwt', data.accessToken);
         console.log('Logged in:', data);
         setErrorMessage('');
-        window.location.href = '/basket';
+        window.location.href = '/shop';
       } else {
         setErrorMessage('Invalid username or password.');
       }
@@ -52,7 +52,7 @@ const LoginPage = () => {
             <div className="divider">
               <span></span>
             </div>
-            <button className="google-login" onClick={() => window.location.href = '/auth/google'}>
+            <button className="google-login" onClick={() => window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`}>
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" />
               Sign in with Google
             </button>

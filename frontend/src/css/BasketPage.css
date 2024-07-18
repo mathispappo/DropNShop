@@ -220,3 +220,11 @@
   border: none;
   cursor: pointer;
 }
+
+.error-input {
+  border: 1px solid red !important;
+}
+
+.error-message {
+  color: red !important;
+}

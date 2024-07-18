@@ -1,9 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BiHome } from "react-icons/bi";
 
 
-function MenuBar() {
+const MenuBar = () => {
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/me`, {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setUsername(data.username);
+          } else {
+            console.error('Failed to fetch user data');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+
   return (
     <div style={menuStyle}>
       <div style={leftMenuStyle}>
@@ -19,7 +47,7 @@ function MenuBar() {
       </div>
       <div style={rightMenuStyle}>
         <button style={searchButtonStyle}>🔍 Search</button>
-        <Link to="/login" style={loginStyle}>Log in</Link>
+        <Link to="/login" style={loginStyle}>{username ? `Hello, ${username}` : 'Login'}</Link>
       </div>
     </div>
   );

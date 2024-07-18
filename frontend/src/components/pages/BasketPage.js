@@ -1,9 +1,5 @@
 import React, { useEffect, useState }  from 'react';
 import '../../css/BasketPage.css';
-import productImage1 from '../../assets/product/product1.png';
-import productImage2 from '../../assets/product/product2.png';
-import productImage3 from '../../assets/product/product3.png';
-import productImage4 from '../../assets/product/product4.png';
 import paypal from '../../assets/payment/paypal.png';
 import stripe from '../../assets/payment/stripe.png';
 import mastercard from '../../assets/payment/mastercard.png';
@@ -15,8 +11,8 @@ const BasketPage = () => {
   const [message, setMessage] = useState('');
   const [coupon, setCoupon] = useState('');
   const [couponError, setCouponError] = useState('');
-  const [discount, setDiscount] = useState(0);
-  const [delivery, setDelivery] = useState(29.99);
+  const [discount] = useState(0);
+  const [delivery] = useState(29.99);
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
 
@@ -57,26 +53,41 @@ const BasketPage = () => {
   }, [cartItems, discount, delivery]);
 
   const handleUpdateQuantity = async (itemId, quantity) => {
+    if (quantity < 1) return;
+  
     try {
       const jwt = localStorage.getItem('jwt');
+      if (!jwt) {
+        throw new Error('JWT not found');
+      }
+  
+      const payload = { itemId: Number(itemId), quantity: Number(quantity) };
+      console.log('Updating cart item with payload:', payload); // Debugging line
+  
       const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({ itemId, quantity }),
+        body: JSON.stringify(payload),
       });
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        console.error('Backend error:', errorData);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message}`);
       }
+  
       const updatedItem = await response.json();
       setCartItems(cartItems.map(item => (item.id === itemId ? updatedItem : item)));
     } catch (error) {
       console.error('Error updating cart item:', error);
-      setError('Error updating cart item.');
+      setError(`Error updating cart item: ${error.message}`);
     }
   };
+  
+  
 
   const handleDeleteItem = async (itemId) => {
     try {
@@ -128,42 +139,50 @@ const BasketPage = () => {
 
   return (
     <div className="basket-page">
-      <div className="basket-container">
-        <div className="product-list">
-          <h2>Shopping Cart</h2>
-          <div className="product-header">
-            <span className='header-product'>Product</span>
-            <span className='header-quantity'>Quantity</span>
-            <span className='header-price'>Price</span>
-          </div>
-          {cartItems.map(item => (
-          <div key={item.id} className="product-item">
-            <img src={item.imageUrl} alt={item.title} />
-            <div className="product-details">
-              <h3>{item.title}</h3>
-            </div>
-            <div className="quantity">
-              <button className="quantity-button" onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
-              <input type="text" value={item.quantity} readOnly />
-              <button
-                className="quantity-button"
-                onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-              >+</button>
-            </div>
-            <div className="price">${(item.price || 0).toFixed(2)}</div>
-            <button className="remove-button" onClick={() => handleDeleteItem(item.id)}>🗑️</button>
-          </div>
-          ))}
-          <div className="buttons">
-          <button className="back-button" onClick={() => window.history.back()}>Back</button>
-          <button className="cancel-button" onClick={handleCancelOrder}>Cancel Order</button>
-          </div>
+      {!cartItems.length ? (
+        <div className="empty-basket">
+          <h2>Your basket is empty</h2>
+          <p>Go back to the <a href="/shop">shop</a> to add items</p>
         </div>
+      ) : (
+        <div className="basket-container">
+          <div className="product-list">
+            <h2>Shopping Cart</h2>
+            {message && <p className="success-message">{message}</p>}
+            <div className="product-header">
+              <span className='header-product'>Product</span>
+              <span className='header-quantity'>Quantity</span>
+              <span className='header-price'>Price</span>
+            </div>
+            {cartItems.map(item => (
+            <div key={item.id} className="product-item">
+              <img src={item.itemId.imageUrl} alt={item.itemId.title} />
+              <div className="product-details">
+              <h3>{item.itemId.title}</h3>
+              </div>
+              <div className="quantity">
+                <button className="quantity-button" onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+                <input type="text" value={item.quantity} readOnly />
+                <button
+                  className="quantity-button"
+                  onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                >+</button>
+              </div>
+              <div className="price">${Math.floor(item.itemId.price)}</div>
+              <button className="remove-button" onClick={() => handleDeleteItem(item.id)}>🗑️</button>
+            </div>
+            ))}
+            <div className="buttons">
+            <button className="back-button" onClick={() => window.history.back()}>Back</button>
+            <button className="cancel-button" onClick={handleCancelOrder}>Cancel Order</button>
+            </div>
+          </div>
         <div className="summary-section">
           <div className="coupon-code">
             <h3>Coupon Code</h3>
-            <input type="text" placeholder="Enter your coupon code" value={coupon} onChange={(e) => setCoupon(e.target.value)}/>
+            <input type="text" className={couponError ? 'error-input' : ''} placeholder="Enter your coupon code" value={coupon} onChange={(e) => setCoupon(e.target.value)}/>
             <button className="apply-coupon-button" onClick={handleApplyCoupon}>Apply Your Coupon</button>
+            {couponError && <p className="error-message">{couponError}</p>}
           </div>
           <div className="order-summary">
             <h3>Order Summary</h3>
@@ -184,6 +203,7 @@ const BasketPage = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

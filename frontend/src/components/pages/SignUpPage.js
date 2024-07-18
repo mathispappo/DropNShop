@@ -57,7 +57,7 @@ const SignUpPage = () => {
             <div className="divider">
               <span></span>
             </div>
-            <button className="google-login" onClick={() => window.location.href = '/auth/google'}>
+            <button className="google-login" onClick={() => window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`}>
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" />
               Sign up with Google
             </button>
