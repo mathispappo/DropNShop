@@ -16,32 +16,33 @@ const BasketPage = () => {
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const jwt = localStorage.getItem('jwt');
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setCartItems(data);
-      } catch (error) {
-        console.error('Error fetching cart items:', error);
-        setError('Error fetching cart items.');
+  const fetchCartItems = async () => {
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      const data = await response.json();
+      console.log('Fetched cart items:', data); // Logging fetched data
+      setCartItems(data);
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+      setError('Error fetching cart items.');
+    }
+  };
 
+  useEffect(() => {
     fetchCartItems();
   }, []);
 
   useEffect(() => {
     const calculateTotals = () => {
-      const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      const subtotal = cartItems.reduce((acc, item) => acc + Math.floor(item.item.price) * item.quantity, 0);
       const calculatedTax = subtotal * 0.1; // Assume a 10% tax rate
       const calculatedTotal = subtotal - discount + delivery + calculatedTax;
 
@@ -52,61 +53,62 @@ const BasketPage = () => {
     calculateTotals();
   }, [cartItems, discount, delivery]);
 
-  const handleUpdateQuantity = async (itemId, quantity) => {
-    if (quantity < 1) return;
-  
-    try {
-      const jwt = localStorage.getItem('jwt');
-      if (!jwt) {
-        throw new Error('JWT not found');
-      }
-  
-      const payload = { itemId: Number(itemId), quantity: Number(quantity) };
-      console.log('Updating cart item with payload:', payload); // Debugging line
-  
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Backend error:', errorData);
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message}`);
-      }
-  
-      const updatedItem = await response.json();
-      setCartItems(cartItems.map(item => (item.id === itemId ? updatedItem : item)));
-    } catch (error) {
-      console.error('Error updating cart item:', error);
-      setError(`Error updating cart item: ${error.message}`);
+
+  // Use the new fetchCartItems function to refresh the state after updating quantity
+const handleUpdateQuantity = async (itemId, quantity) => {
+  if (quantity < 1) return;
+
+  try {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      throw new Error('JWT not found');
     }
-  };
+
+    const payload = { itemId: Number(itemId), quantity: Number(quantity) };
+    console.log('Updating cart item with payload:', payload); // Logging payload
+
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Backend error:', errorData);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message}`);
+    }
+
+    await fetchCartItems(); // Re-fetch the cart items to update the state
+  } catch (error) {
+    console.error('Error updating cart item:', error);
+    setError(`Error updating cart item: ${error.message}`);
+  }
+};
   
   
 
-  const handleDeleteItem = async (itemId) => {
-    try {
-      const jwt = localStorage.getItem('jwt');
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${itemId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      setCartItems(cartItems.filter(item => item.id !== itemId));
-    } catch (error) {
-      console.error('Error deleting cart item:', error);
-      setError('Error deleting cart item.');
+const handleDeleteItem = async (itemId) => {
+  try {
+    const jwt = localStorage.getItem('jwt');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/cart-items/${itemId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    await fetchCartItems(); // Re-fetch the cart items to update the state
+  } catch (error) {
+    console.error('Error deleting cart item:', error);
+    setError('Error deleting cart item.');
+  }
+};
 
   const handleCancelOrder = async () => {
     try {
@@ -156,19 +158,19 @@ const BasketPage = () => {
             </div>
             {cartItems.map(item => (
             <div key={item.id} className="product-item">
-              <img src={item.itemId.imageUrl} alt={item.itemId.title} />
+              <img src={item.item.imageUrl} alt={item.item.title} />
               <div className="product-details">
-              <h3>{item.itemId.title}</h3>
+              <h3>{item.item.title}</h3>
               </div>
               <div className="quantity">
-                <button className="quantity-button" onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+                <button className="quantity-button" onClick={() => handleUpdateQuantity(item.item.id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
                 <input type="text" value={item.quantity} readOnly />
                 <button
                   className="quantity-button"
-                  onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                  onClick={() => handleUpdateQuantity(item.item.id, item.quantity + 1)}
                 >+</button>
               </div>
-              <div className="price">${Math.floor(item.itemId.price)}</div>
+              <div className="price">${Math.floor(item.item.price)}</div>
               <button className="remove-button" onClick={() => handleDeleteItem(item.id)}>🗑️</button>
             </div>
             ))}
