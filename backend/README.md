@@ -6,7 +6,8 @@
 2. Copy `.env.example` to `.env` and fill in the values (defaults are fine for local development, except for the Google OAuth credentials)
 3. Run `npm install`
 4. Ensure the DB manager is up and running first
-5. Run `npm run dev` to start the backend server
+5. Run `npm run grpc:generate` to generate gRPC typescript definitions
+6. Run `npm run dev` to start the backend server
 
 ## API
 

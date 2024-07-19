@@ -1,5 +1,11 @@
 # DropNShop
 
+M1 DE 2
+
+Elliot Maisl\
+Mathis Pappo\
+Martin Vialle\
+
 ## Installation
 
 Have Node.js >=18 installed

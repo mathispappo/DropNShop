@@ -2,6 +2,14 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Installation
+
+1. Have Node.js >=18 installed
+2. Copy `.env.example` to `.env` and fill in the values (defaults are fine for local development)
+3. Run `npm install`
+4. Ensure the DB manager and the backend are up and running first
+5. Run `npm run dev` to start the frontend
+
 ## Available Scripts
 
 In the project directory, you can run:

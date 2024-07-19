@@ -6,7 +6,8 @@
 2. Copy `.env.example` to `.env` and fill in the values
 3. Run `npm install`
 4. Ensure your postgres database is running, and the connection string in `.env` is correct
-5. Run `npm run dev` to start the DB manager server
+5. Run `npm run db:push` to push the schema to the database.
+6. Run `npm run dev` to start the DB manager server
 
 ## gRPC API
 
